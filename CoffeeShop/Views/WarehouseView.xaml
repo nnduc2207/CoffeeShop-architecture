@@ -1,0 +1,353 @@
+﻿<UserControl x:Class="CoffeeShop.Views.WarehouseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CoffeeShop.Views"
+             xmlns:models="clr-namespace:CoffeeShop.Models"
+             xmlns:vm="clr-namespace:CoffeeShop.ViewModels"
+             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"              
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+            
+            Background="#3e2723"
+            DataContext="{StaticResource WVM}"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="1400">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <Grid>
+
+        <!--Cảnh báo-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenMessageDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="2"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}">
+
+            <!--Nội dung dialog cảnh báo-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20" Text="{Binding Message}" Foreground="#3e2723">
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding CloseMessageDialog}"  CommandParameter="true">
+                                CLOSE
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <!--Thêm nguyên liệu-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenAddRawMaterialDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="1"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}">
+
+            <!--Nội dung dialog thêm nguyên liệu-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock>
+                               THÊM NGUYÊN LIỆU MỚI VÀO KHO
+                        </TextBlock>
+                        <Grid Width="400" Height="300">
+                            <StackPanel Orientation="Vertical" Margin="30 10">
+                                <TextBox Margin="5 10"
+                                  materialDesign:HintAssist.Hint="TÊN NGUYÊN LIỆU"
+                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                    <TextBox.Text>
+                                        <Binding Path="NewRawMaterialName">
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+
+                                <TextBox Margin="5 10"
+                                  materialDesign:HintAssist.Hint="SỐ LƯỢNG NHẬP VÀO"
+                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                    <TextBox.Text>
+                                        <Binding Path="NewRawMaterialAmount">
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <TextBox Margin="5 10"
+                                  materialDesign:HintAssist.Hint="ĐƠN VỊ"
+                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                    <TextBox.Text>
+                                        <Binding Path="NewRawMaterialUnit">
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding AddRawMaterialCommand}"  
+                                  CommandParameter="true">
+                                ACCEPT
+                            </Button>
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding AddRawMaterialCommand}"  CommandParameter="false">
+                                CANCEL
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <!--Thay đổi số lượng 1 nguyên liệu-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenChangeAmountRawMaterialDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="1"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}">
+
+            <!--Nội dung dialog thay đổi số lượng-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock>
+                               THAY ĐỔI SỐ LƯỢNG
+                        </TextBlock>
+                        <Grid Width="400" Height="150">
+                            <StackPanel Orientation="Vertical" Margin="30 10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                        <TextBlock.Text>
+                                            SỐ LƯỢNG HIỆN CÓ:
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                        <TextBlock.Text>
+                                            SỐ LƯỢNG THAY ĐỔI:
+                                        </TextBlock.Text>
+                                    </TextBlock>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                        <TextBlock.Text>
+                                            <Binding Path="PresentRawMaterialAmount">
+                                            </Binding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5 10"
+                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                                        <TextBox.Text>
+                                            <Binding Path="ChangeRawMaterialAmount">
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding ChangeAmountRawMaterialCommand}"  
+                                  CommandParameter="true">
+                                ACCEPT
+                            </Button>
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding ChangeAmountRawMaterialCommand}"  CommandParameter="false">
+                                CANCEL
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <!--Cảnh báo xóa nguyên liệu-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenDeleteRawMaterialDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="1"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}">
+
+            <!--Nội dung dialog thay đổi số lượng-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20">
+                            <TextBlock.Text>
+                                Dữ liệu sẽ bị mất hoàn toàn và không thể khôi phục
+                            Xác nhận xóa ?
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsDefault="False"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding DeleteRawMaterialCommand}"  
+                                  CommandParameter="true">
+                                ACCEPT
+                            </Button>
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding DeleteRawMaterialCommand}"  CommandParameter="false">
+                                CANCEL
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="770"/>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <TextBlock DockPanel.Dock="Left" FontSize="40" FontWeight="DemiBold" Margin="10" Width="300" Foreground="SandyBrown">
+                    Kho nguyên liệu
+                </TextBlock>
+
+                <!--Search Bar-->
+                <Border BorderThickness="2" BorderBrush="SandyBrown" CornerRadius="10" Margin="100 10">
+                    <StackPanel  Orientation="Horizontal" Margin="10">
+                        <materialDesign:PackIcon Foreground="SandyBrown" VerticalAlignment="Center" Kind="Magnify" Width="30" Height="30" />
+                        <TextBox DockPanel.Dock="Right"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="250"
+                            Height="30"
+                            AcceptsReturn="True"
+                            materialDesign:HintAssist.Hint="Nhập tên nguyên liệu"
+                            materialDesign:HintAssist.Foreground="SandyBrown"
+                            Text="{Binding Search,UpdateSourceTrigger=PropertyChanged}" Foreground="SandyBrown"/>
+                    </StackPanel>
+                </Border>
+
+                <!--Nút thêm nguyên liệu-->
+                <Button DockPanel.Dock="Right" Width="170" Height="55" Background="SandyBrown" BorderThickness="1" BorderBrush="SandyBrown"  ToolTip="Add New Raw Material" HorizontalAlignment="Right"
+                        Command="{Binding ClickAddRawMaterialButtonCommand}" VerticalAlignment="Top" Margin="10">
+                    <materialDesign:PackIcon Foreground="#3e2723"  Width="50" Height="40" Kind="Plus"/>
+                </Button>
+            </DockPanel>
+            <!--Nguyên liệu ListView-->
+            <ListView x:Name="RawMaterialsListView" Grid.Row="1"
+            ItemsSource="{Binding RawMaterials}" SelectedItem="{Binding SelectedRawMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+                <ListView.View>
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+                                <Setter Property="FontSize" Value="20"></Setter>
+                                <Setter Property="Padding" Value="10 0 0 5"></Setter>
+                                <Setter Property="Margin" Value="10 0 0 0"></Setter>
+                                <Setter Property="Foreground" Value="SaddleBrown"></Setter>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridViewColumn Header="Tên nguyên liệu" Width="600">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontWeight="Medium" Margin="10 5" Foreground="SandyBrown" Text="{Binding Ten}" ></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Số lượng" Width="300">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontWeight="Medium" Margin="10 5" Foreground="SandyBrown" Text="{Binding SoLuong}"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Đơn vị" Width="200">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontWeight="Medium" Margin="10 5" Foreground="SandyBrown" Text="{Binding DonVi}"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="150">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Height="auto" Margin="10 5" BorderBrush="SaddleBrown" Background="Gray" BorderThickness="1" Padding="0" HorizontalAlignment="Right"
+                                                Command="{Binding ElementName=RawMaterialsListView, Path=DataContext.ClickChangeAmountRawMaterialCommand}" CommandParameter="{Binding}" ToolTip="Increase or decrease amount">
+                                        <materialDesign:PackIcon Width="100" Height="40" Kind="PencilPlus" Background="SaddleBrown" />
+                                    </Button>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Height="auto" Margin="10 5" BorderBrush="Red" Background="Transparent" BorderThickness="1" Padding="0" HorizontalAlignment="Right"
+                                                Command="{Binding ElementName=RawMaterialsListView, Path=DataContext.ClickDeleteRawMaterialCommand}" CommandParameter="{Binding}" ToolTip="Delete">
+                                        <materialDesign:PackIcon Width="40" Height="40" Kind="CloseCircle" Background="Red" />
+                                    </Button>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,140 @@
+﻿<UserControl x:Class="CoffeeShop.Views.StatisticView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CoffeeShop.Views"
+             xmlns:models="clr-namespace:CoffeeShop.Models"
+             xmlns:vm="clr-namespace:CoffeeShop.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"             
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+
+             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+            
+            Background="#3e2723"
+            DataContext="{StaticResource StatisticVM}"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="1400">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <UserControl.Resources>
+        <models:NumberToVNDConverter x:Key="MoneyConverter"/>
+        <models:DateConverter x:Key="DateConverter"/>
+    </UserControl.Resources>
+    <Grid>
+
+        <!--Cảnh báo-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenMessageDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="2"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}">
+
+            <!--Nội dung dialog cảnh báo-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20" Text="{Binding Message}" Foreground="#3e2723">
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding CloseMessageDialog}"  CommandParameter="true">
+                                CLOSE
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="370"/>
+                <RowDefinition Height="370"/>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <TextBlock DockPanel.Dock="Left" FontSize="40" FontWeight="DemiBold" Margin="10" Width="300" Foreground="SandyBrown">
+                    Thống kê
+                </TextBlock>
+
+                <ComboBox DockPanel.Dock="Right" Width="200" Height="30"
+                          materialDesign:HintAssist.Hint="1"
+                          materialDesign:TextFieldAssist.PrefixText="Data On Year: " Foreground="SandyBrown"
+                          VerticalAlignment="Top"
+                          Margin="10 25" ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}"
+                          IsEditable="True">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"></TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </DockPanel>
+
+
+            <!--Doanh thu sản phẩm-->
+            <DockPanel Grid.Row="1">
+                <Border DockPanel.Dock="Top" HorizontalAlignment="Center" CornerRadius="10" BorderBrush="SaddleBrown" BorderThickness="2">
+                    <TextBlock Margin="10" FontSize="20" FontWeight="Medium"  Text="Statistics by Products" Foreground="SandyBrown"></TextBlock>
+                </Border>
+                <lvc:CartesianChart Series="{Binding ProductChartCollection}">
+                    <lvc:CartesianChart.SeriesColors>
+                        <lvc:ColorsCollection>
+                            <Color>SandyBrown</Color>
+                        </lvc:ColorsCollection>
+                    </lvc:CartesianChart.SeriesColors>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Doanh thu" LabelFormatter="{Binding ProductFormatter}" Foreground="SandyBrown"></lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Sản phẩm" Labels="{Binding ProductLabels}" Foreground="SandyBrown"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                    <lvc:CartesianChart.DataTooltip>
+                        <lvc:DefaultTooltip SelectionMode="SharedYValues"></lvc:DefaultTooltip>
+                    </lvc:CartesianChart.DataTooltip>
+                </lvc:CartesianChart>
+            </DockPanel>
+
+            <!--Doanh thu tháng-->
+            <DockPanel Grid.Row="2">
+                <Border DockPanel.Dock="Top" HorizontalAlignment="Center" CornerRadius="10" BorderBrush="SaddleBrown" BorderThickness="2">
+                    <TextBlock Margin="10" FontSize="20" FontWeight="Medium"  Text="Statistics by Months" Foreground="SandyBrown"></TextBlock>
+                </Border>
+                <lvc:CartesianChart  Series="{Binding TimeChartCollection}">
+                    <lvc:CartesianChart.SeriesColors>
+                        <lvc:ColorsCollection>
+                            <Color>SandyBrown</Color>
+                        </lvc:ColorsCollection>
+                    </lvc:CartesianChart.SeriesColors>
+                    <lvc:CartesianChart.DataTooltip>
+                        <lvc:DefaultTooltip BulletSize="20" Background="LightGray" SelectionMode="SharedXValues" FontSize="20"/>
+                    </lvc:CartesianChart.DataTooltip>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Tháng" Labels="{Binding TimeLabels}" Foreground="SandyBrown" FontSize="15"></lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Doanh thu" LabelFormatter="{Binding TimeFormatter}" FontSize="15"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

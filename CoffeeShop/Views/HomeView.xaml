@@ -1,0 +1,460 @@
+﻿<UserControl x:Class="CoffeeShop.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CoffeeShop.Views"
+             xmlns:vm="clr-namespace:CoffeeShop.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:models="clr-namespace:CoffeeShop.Models"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+            Background="White"
+            DataContext="{StaticResource HVM}"
+
+             d:DesignHeight="850" d:DesignWidth="1400">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <UserControl.Resources>
+        <models:BytesToBitMapConverter x:Key="ImageConverter"/>
+        <models:NumberToVNDConverter x:Key="MoneyConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <!--Cảnh báo-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenMessageDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="2"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}">
+
+            <!--Nội dung dialog cảnh báo-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock Margin="5 10"
+                                  VerticalAlignment="Center"
+                                  FontSize="20" Text="{Binding Message}" Foreground="#3e2723">
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding CloseMessageDialog}"  CommandParameter="true">
+                                CLOSE
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <!--Xem thông tin thanh toán-->
+        <materialDesign:DialogHost IsOpen="{Binding IsOpenShowCheckoutDialog}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                    DialogMargin="8" Panel.ZIndex="1"
+                                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualHeight}" Background="SandyBrown">
+
+            <!--Nội dung dialog XEM THÔNG TIN THANH TOÁN-->
+            <materialDesign:DialogHost.DialogContent>
+                <Border Background="SandyBrown">
+                    <StackPanel Margin="16">
+                        <TextBlock Foreground="#3e2723">
+                               THÔNG TIN THANH TOÁN
+                        </TextBlock>
+                        <Grid Width="500" Height="auto">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="auto" MaxHeight="500"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBox Margin="5" Grid.Column="0" Grid.Row="0"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    TÊN KHÁCH HÀNG
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5"  Grid.Column="1"  Grid.Row="0" HorizontalAlignment="Right"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    <Binding Path="ShowCheckoutCustomerName">
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5" Grid.Column="0" Grid.Row="1"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    ĐIỂM TÍCH LŨY HIỆN TẠI
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5"  Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Right"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    <Binding Path="ShowCheckoutCustomerPoint">
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5" Grid.Column="0" Grid.Row="2"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    ĐIỂM TÍCH LŨY NHẬN ĐƯỢC
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5"  Grid.Column="1"  Grid.Row="2" HorizontalAlignment="Right"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    <Binding Path="ShowCheckoutPoint">
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <!--Cart ListView-->
+                            <ListView Height="auto" MaxHeight="300" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding CartProducts}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Focusable" Value="false"/>
+                                        <Setter Property="IsSelected" Value="false"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Tên sản phẩm" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="10 5"  Foreground="#3e2723" Text="{Binding Ten}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Giá" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="10 5" Foreground="#3e2723" Text="{Binding Gia, Converter={StaticResource MoneyConverter}}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="3 5" Foreground="#3e2723" Text="X"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Số lượng" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="3 5" Foreground="#3e2723" Text="{Binding SoLuong}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Tổng giá" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="5 5" Foreground="#3e2723" Text="{Binding TongGia, Converter={StaticResource MoneyConverter}}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+
+                            <TextBox Margin="5" Grid.Column="0" Grid.Row="4"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    TỔNG TIỀN
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5"  Grid.Column="1"  Grid.Row="4" HorizontalAlignment="Right"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    <Binding Path="TongTien" Converter="{StaticResource MoneyConverter}">
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5" Grid.Column="0" Grid.Row="5"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    ĐIỂM THANH TOÁN
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5"  Grid.Column="1"  Grid.Row="5" HorizontalAlignment="Right"
+                                      Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="False" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    <Binding Path="ShowCheckoutSpendPoint">
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="0" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="20" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    ____________________________________________________________________________________________
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5" Grid.Column="0" Grid.Row="7"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    SỐ TIỀN THANH TOÁN
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <TextBox Margin="5"  Grid.Column="1"  Grid.Row="7" HorizontalAlignment="Right"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="15" IsReadOnly="True" Foreground="#3e2723">
+                                <TextBox.Text>
+                                    <Binding Path="ShowCheckoutRealPay" Converter="{StaticResource MoneyConverter}">
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsDefault="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding CloseShowCheckoutCommand}"  CommandParameter="true">
+                                CHECKOUT
+                            </Button>
+                            <Button
+                                  Style="{StaticResource MaterialDesignFlatButton}"
+                                  IsCancel="True"
+                                  Margin="0 8 8 0"
+                                  Command="{Binding CloseShowCheckoutCommand}"  CommandParameter="false">
+                                CLOSE
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Vertical" Background="#3e2723">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="40" FontWeight="DemiBold" Margin="10" Foreground="SandyBrown">
+                    Menu
+                    </TextBlock>
+
+                </StackPanel>
+                <!--Loại sản phẩm-->
+                <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="120" Height="50" Padding="0"
+                                 Command="{Binding ElementName=Categories, Path=DataContext.ChangeCategoryCommand}" CommandParameter="{Binding}">
+                                <Border Background="SaddleBrown" Width="120" Height="50" CornerRadius="15" Margin="0">
+                                    <TextBlock Foreground="SandyBrown"  VerticalAlignment="Center" Text="{Binding Ten}" HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Medium" TextAlignment="Center"></TextBlock>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+
+                <!--List Item-->
+                <ListView Name="Products" ItemsSource="{Binding Products}" HorizontalAlignment="Left"  Width="875" Height="640" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="195" Height="240" Padding="0"
+                                 Command="{Binding ElementName=Products, Path=DataContext.AddToCartCommand}" CommandParameter="{Binding}">
+                                <Border Background="SaddleBrown" CornerRadius="15" Margin="0" Width="195" Height="240">
+                                    <Grid Width="195">
+                                        <Border VerticalAlignment="Top" Height="170" CornerRadius="10" Margin="10" BorderBrush="Gray" BorderThickness="1">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding Anh, Converter={StaticResource ImageConverter}}"></ImageBrush>
+                                            </Border.Background>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Bottom" Margin="0 0 0 5">
+                                            <TextBlock Foreground="SandyBrown"  VerticalAlignment="Bottom" Text="{Binding Ten}" HorizontalAlignment="Center" TextAlignment="Center" FontSize="13" TextWrapping="Wrap" FontWeight="Medium"></TextBlock>
+                                            <TextBlock Foreground="SandyBrown"  VerticalAlignment="Bottom" Text="{Binding Gia, Converter={StaticResource MoneyConverter}}" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold"></TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+
+            </StackPanel>
+            <DockPanel Grid.Column="1" Background="SandyBrown">
+                <TextBlock DockPanel.Dock="Top" FontSize="40" FontWeight="DemiBold" Margin="10" Foreground="#3e2723">
+                    Cart
+                </TextBlock>
+
+                <!--Thông tin khách hàng-->
+                <StackPanel Orientation="Horizontal" Margin="5" DockPanel.Dock="Top">
+                    <TextBox Margin="5"
+                                      materialDesign:HintAssist.Hint="SỐ ĐIỆN THOẠI"
+                                      materialDesign:HintAssist.Foreground="#3e2723"
+                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="20" Foreground="#3e2723">
+                        <TextBox.Text>
+                            <Binding Path="CustomerPhone">
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBox Margin="5" Width ="230"
+                                      materialDesign:HintAssist.Hint="TÊN KHÁCH HÀNG"
+                                      materialDesign:HintAssist.Foreground="#3e2723"
+                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                      VerticalAlignment="Center"
+                                      FontSize="20" IsReadOnly="{Binding IsCustomer}" Foreground="#3e2723">
+                        <TextBox.Text>
+                            <Binding Path="CustomerName">
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <Button Height="auto" Margin="30 20 0 20" BorderBrush="#3e2723" Background="#3e2723" BorderThickness="1" Padding="0" HorizontalAlignment="Right"
+                                                Command="{Binding ClickCheckCustommerButtonCommand}" CommandParameter="{Binding}" ToolTip="check custommer">
+                        <materialDesign:PackIcon Width="70" Height="40" Kind="AccountCheckOutline" Background="#3e2723" />
+                    </Button>
+                </StackPanel>
+
+                <!--Cart ListView-->
+                <ListView x:Name="CartsListView" Height="500" DockPanel.Dock="Top"
+                            ItemsSource="{Binding CartProducts}" SelectedItem="{Binding SelectedCartProduct}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false"/>
+                            <Setter Property="IsSelected" Value="false"/>
+                        </Style>
+
+                    </ListView.ItemContainerStyle>
+                    <ListView.View>
+                        <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+                                    <Setter Property="FontSize" Value="17"></Setter>
+                                    <Setter Property="Padding" Value="0 0 0 5"></Setter>
+                                    <Setter Property="Margin" Value="10 0 0 0"></Setter>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn Header="Tên sản phẩm" Width="140">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="0" Text="{Binding Ten}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Giá" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="0" Text="{Binding Gia, Converter={StaticResource MoneyConverter}}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="40">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Height="auto" Margin="0 10 0 10" BorderBrush="SaddleBrown" BorderThickness="1" Padding="0" 
+                                                Command="{Binding ElementName=CartsListView, Path=DataContext.ClickDecreaseCartProductButtonCommand}" CommandParameter="{Binding}">
+                                            <materialDesign:PackIcon Width="25" Height="25" Kind="Minus" Background="SaddleBrown" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Số lượng" Width="80">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="25 0 0 0" Text="{Binding SoLuong}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="40">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Height="auto" Margin="0" BorderBrush="SaddleBrown" Background="SandyBrown" BorderThickness="1" Padding="0" 
+                                                Command="{Binding ElementName=CartsListView, Path=DataContext.ClickIncreaseCartProductButtonCommand}" CommandParameter="{Binding}">
+                                            <materialDesign:PackIcon Width="25" Height="25" Kind="Plus" Background="SaddleBrown" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Tổng giá" Width="200">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Margin="5 0 0 0" Text="{Binding TongGia, Converter={StaticResource MoneyConverter}}"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <!--Check out-->
+                <Button Margin="30 20 0 20" BorderBrush="#3e2723" Background="#3e2723" BorderThickness="1" Padding="0" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Width="200" Height="80"
+                    Command="{Binding ClickCheckoutButtonCommand}" CommandParameter="{Binding}" Content="{Binding TongTien,Converter={StaticResource MoneyConverter}}" FontSize="30" Foreground="SandyBrown">
+
+                </Button>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

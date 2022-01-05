@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a5be1531e2d24759a448695bc3e6cd88" Name="Diagram1" ZoomLevel="83">
+        <EntityTypeShape EntityType="CoffeeShopModel.ChiTietHoaDon" Width="1.5" PointX="14" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.HoaDon" Width="1.5" PointX="11.75" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.KhachHang" Width="1.5" PointX="9.5" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.KhoNguyenLieu" Width="1.5" PointX="6.75" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.LoaiSanPham" Width="1.5" PointX="0.5" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.NguyenLieu" Width="1.5" PointX="4.875" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.SanPham" Width="1.5" PointX="2.875" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.sysdiagrams" Width="1.5" PointX="6.75" PointY="1.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="CoffeeShopModel.ThongSo" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <AssociationConnector Association="CoffeeShopModel.FK_ChiTietHoaDon_HoaDon" ManuallyRouted="false" />
+        <AssociationConnector Association="CoffeeShopModel.FK_HoaDon_KhachHang" ManuallyRouted="false" />
+        <AssociationConnector Association="CoffeeShopModel.FK_NguyenLieu_KhoNguyenLieu" ManuallyRouted="false" />
+        <AssociationConnector Association="CoffeeShopModel.FK_SanPham_LoaiSanPham" ManuallyRouted="false" />
+        <AssociationConnector Association="CoffeeShopModel.FK_NguyenLieu_SanPham" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
