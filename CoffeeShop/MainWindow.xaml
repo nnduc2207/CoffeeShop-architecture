@@ -8,6 +8,8 @@
         xmlns:viewmodels="clr-namespace:CoffeeShop.ViewModels"
         xmlns:views="clr-namespace:CoffeeShop.Views"
         xmlns:models="clr-namespace:CoffeeShop.Models"
+        xmlns:converter="clr-namespace:CoffeeShop.Services.Converters"
+        xmlns:services="clr-namespace:CoffeeShop.Services"
         
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
          TextElement.FontWeight="Regular"
@@ -106,7 +108,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="20" Foreground="SaddleBrown"
                         x:Name="PasswordBox"
-                        models:PasswordBoxAssistant.BindPassword="true"  models:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        services:PasswordBoxAssistant.BindPassword="true"  services:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </PasswordBox>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button

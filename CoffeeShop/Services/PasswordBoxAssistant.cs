@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace CoffeeShop.Models
+namespace CoffeeShop.Services
 {
     public static class PasswordBoxAssistant
     {

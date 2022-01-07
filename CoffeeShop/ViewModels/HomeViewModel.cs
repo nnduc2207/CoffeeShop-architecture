@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.Model;
 using CoffeeShop.Models;
+using CoffeeShop.Services.ModelServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace CoffeeShop.ViewModels
                 {
                     int maloai = value.Ma;
                     Products = new AsyncObservableCollection<dynamic>();
-                    foreach (var item in DataProvider.Ins.DB.SanPham.Where(x => x.MaLoai == maloai))
+                    foreach (var item in SanPhamService.GetByType(maloai))
                     {
                         if (CartProducts.Where(x=>x.MaSP==item.Ma).Count() == 0)
                         {
@@ -102,7 +103,8 @@ namespace CoffeeShop.ViewModels
                     _showCheckoutSpendPoint = 0;
                     if (HasCustomer == true)
                     {
-                        ShowCheckoutPoint = TinhDiemThuong(DataProvider.Ins.DB.KhachHang.First(x => x.SDT == CustomerPhone).Ma, TongTien);
+                        KhachHang kh = KhachHangService.GetByPhone(CustomerPhone);
+                        ShowCheckoutPoint = TinhDiemThuong(kh.Ma, TongTien);
                     }
                 }
                 else
@@ -153,7 +155,7 @@ namespace CoffeeShop.ViewModels
                 CartProducts = new AsyncObservableCollection<dynamic>();
                 _spendMaterial = new AsyncObservableCollection<dynamic>();
                 Categories = new AsyncObservableCollection<dynamic>();
-                foreach (var item in DataProvider.Ins.DB.LoaiSanPham)
+                foreach (var item in LoaiSanPhamService.GetAll())
                 {
                     Categories.Add(new
                     {
@@ -164,7 +166,6 @@ namespace CoffeeShop.ViewModels
                 SelectedCategory = Categories.ElementAt(0);
 
                 TongTien = 0;
-
             });
 
 
@@ -177,7 +178,7 @@ namespace CoffeeShop.ViewModels
                 {
                     if (IsCustomer == true)
                     {
-                        KhachHang khachhang = (DataProvider.Ins.DB.KhachHang.Where(x => x.SDT == CustomerPhone).Count() == 0) ? null : DataProvider.Ins.DB.KhachHang.First(x => x.SDT == CustomerPhone);
+                        KhachHang khachhang = KhachHangService.GetByPhone(CustomerPhone);
                         if (khachhang == null)
                         {
                             Message = "Khách hàng mới";
@@ -194,15 +195,7 @@ namespace CoffeeShop.ViewModels
                     {
                         if (CustomerName != null && CustomerName.Split(' ').Length != CustomerName.Length + 1)
                         {
-                            DataProvider.Ins.DB.KhachHang.Add(new KhachHang
-                            {
-                                Ma = (DataProvider.Ins.DB.KhachHang.Count() == 0) ? 1 : DataProvider.Ins.DB.KhachHang.Max(x => x.Ma) + 1,
-                                Ten = CustomerName,
-                                SDT = CustomerPhone,
-                                DiemTichLuy = 0,
-                                TongChiTieu = 0,
-                            });
-                            DataProvider.Ins.DB.SaveChanges();
+                            KhachHangService.Create(CustomerName, CustomerPhone);
                             HasCustomer = true;
                             IsCustomer = true;
                         }
@@ -267,7 +260,7 @@ namespace CoffeeShop.ViewModels
                 TongTien = TongTien - param.Gia;
                 if (param.SoLuong == 1)
                 {
-                    SanPham sanpham = DataProvider.Ins.DB.SanPham.First(x => x.Ma == maSP);
+                    SanPham sanpham = SanPhamService.GetById(maSP);
                     if (SelectedCategory.Ma == sanpham.MaLoai)
                     {
                         Products.Add(new
@@ -304,7 +297,7 @@ namespace CoffeeShop.ViewModels
                     }
                 }
                 // trả lại số nguyên liệu hao tổn
-                foreach (var item in DataProvider.Ins.DB.NguyenLieu.Where(x => x.MaSP == maSP))
+                foreach (var item in NguyenLieuService.GetByProduct(maSP))
                 {
                     if (_spendMaterial.Where(x => x.Ma == item.MaNL).Count() != 0)
                     {
@@ -323,7 +316,7 @@ namespace CoffeeShop.ViewModels
                 IsOpenShowCheckoutDialog = true;
                 if (HasCustomer == true)
                 {
-                    KhachHang khachhang = DataProvider.Ins.DB.KhachHang.First(x => x.SDT == CustomerPhone);
+                    KhachHang khachhang = KhachHangService.GetByPhone(CustomerPhone);
                     ShowCheckoutCustomerName = CustomerName;
                     ShowCheckoutCustomerPoint = khachhang.DiemTichLuy;
                     ShowCheckoutPoint = TinhDiemThuong(khachhang.Ma, TongTien);
@@ -351,59 +344,38 @@ namespace CoffeeShop.ViewModels
                         // khách hàng
                         if (HasCustomer)
                         {
-                            int makh = DataProvider.Ins.DB.KhachHang.First(x => x.SDT == CustomerPhone).Ma;
-                            DataProvider.Ins.DB.KhachHang.First(x => x.Ma == makh).TongChiTieu += ShowCheckoutRealPay;
-                            DataProvider.Ins.DB.KhachHang.First(x => x.Ma == makh).DiemTichLuy += ShowCheckoutPoint;
-                            DataProvider.Ins.DB.KhachHang.First(x => x.Ma == makh).DiemTichLuy -= ShowCheckoutSpendPoint;
-                            DataProvider.Ins.DB.SaveChanges();
+                            KhachHang kh = KhachHangService.GetByPhone(CustomerPhone);
+                            kh.TongChiTieu += ShowCheckoutRealPay;
+                            kh.DiemTichLuy += ShowCheckoutPoint;
+                            kh.DiemTichLuy -= ShowCheckoutSpendPoint;
+                            KhachHangService.Update();
                         }
 
                         // Hóa đơn
-                        int mahd = (DataProvider.Ins.DB.HoaDon.Count() == 0) ? 1 : DataProvider.Ins.DB.HoaDon.Max(x => x.Ma) + 1;
+                        HoaDon hd;
                         if (HasCustomer == true)
                         {
-                            DataProvider.Ins.DB.HoaDon.Add(new HoaDon
-                            {
-                                Ma = mahd,
-                                NgayTao = DateTime.Now,
-                                MaKH = DataProvider.Ins.DB.KhachHang.First(x => x.SDT == CustomerPhone).Ma,
-                                DiemTichLuy = ShowCheckoutPoint - ShowCheckoutSpendPoint,
-                                TongTien = ShowCheckoutRealPay,
-                            });
+                            KhachHang kh = KhachHangService.GetByPhone(CustomerPhone);
+                            hd = HoaDonService.Create(ShowCheckoutRealPay, ShowCheckoutPoint - ShowCheckoutSpendPoint, kh.Ma);
                         }
                         else
                         {
-                            DataProvider.Ins.DB.HoaDon.Add(new HoaDon
-                            {
-                                Ma = mahd,
-                                NgayTao = DateTime.Now,
-                                TongTien = ShowCheckoutRealPay,
-                            });
+                            hd = HoaDonService.Create(ShowCheckoutRealPay);
                         }
-                        DataProvider.Ins.DB.SaveChanges();
 
                         // chi tiet hoa don
                         foreach (var item in CartProducts)
                         {
-                            int macthd = (DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == mahd).Count() == 0) ? 1 : DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == mahd).Max(x => x.Ma) + 1;
-                            DataProvider.Ins.DB.ChiTietHoaDon.Add(new ChiTietHoaDon
-                            {
-                                Ma = macthd,
-                                MaHD = mahd,
-                                TenSP = item.Ten,
-                                SoLuong = item.SoLuong,
-                                GiaSP = item.Gia,
-                            });
-                            DataProvider.Ins.DB.SaveChanges();
+                            ChiTietHoaDonService.Create(hd.Ma, item.Ten, item.SoLuong, item.Gia);
                         }
 
                         // Kho nguyên liệu
                         foreach (var item in _spendMaterial)
                         {
-                            int maNL = item.Ma;
-                            DataProvider.Ins.DB.KhoNguyenLieu.First(x => x.MaNL == maNL).SoLuong -= item.SoLuong;
+                            KhoNguyenLieu nl = KhoNguyenLieuService.GetById(item.Ma);
+                            nl.SoLuong -= item.SoLuong;
+                            KhoNguyenLieuService.Update();
                         }
-                        DataProvider.Ins.DB.SaveChanges();
 
                         CustomerPhone = null;
                         CustomerName = null;
@@ -425,7 +397,7 @@ namespace CoffeeShop.ViewModels
         {
             bool result = true;
             // cập nhật số nguyên liệu hao tổn
-            foreach (var item in DataProvider.Ins.DB.NguyenLieu.Where(x=>x.MaSP==maSP))
+            foreach (var item in NguyenLieuService.GetByProduct(maSP))
             {
                 if (_spendMaterial.Where(x=>x.Ma==item.MaNL).Count() != 0)
                 {
@@ -448,8 +420,8 @@ namespace CoffeeShop.ViewModels
             // kiểm tra kho nguyên liệu
             foreach (var item in _spendMaterial)
             {
-                int maNL = item.Ma;
-                if (DataProvider.Ins.DB.KhoNguyenLieu.First(x=>x.MaNL== maNL).SoLuong < item.SoLuong)
+                KhoNguyenLieu nl = KhoNguyenLieuService.GetById(item.Ma);
+                if (nl.SoLuong < item.SoLuong)
                 {
                     result = false;
                     break;
@@ -459,7 +431,7 @@ namespace CoffeeShop.ViewModels
             if (result == false)
             {
                 // trả lại số nguyên liệu hao tổn
-                foreach (var item in DataProvider.Ins.DB.NguyenLieu.Where(x => x.MaSP == maSP))
+                foreach (var item in NguyenLieuService.GetByProduct(maSP))
                 {
                     if (_spendMaterial.Where(x => x.Ma == item.MaNL).Count() != 0)
                     {
@@ -481,22 +453,22 @@ namespace CoffeeShop.ViewModels
         private int TinhDiemThuong(int maKH, int SoTien)
         {
             int result = 0;
-            KhachHang khachhang = DataProvider.Ins.DB.KhachHang.First(x => x.Ma == maKH);
-            if (khachhang.TongChiTieu >= int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThuong").GiaTri))
+            KhachHang khachhang = KhachHangService.GetById(maKH);
+            if (khachhang.TongChiTieu >= int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThuong").GiaTri))
             {
-                float TiLeDoi = float.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThuong").GiaTri);
+                float TiLeDoi = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuong").GiaTri);
                 float diem = TiLeDoi * TongTien;
                 result = (int)Math.Floor(diem);
             }
-            if (khachhang.TongChiTieu >= int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThuongXuyen").GiaTri))
+            if (khachhang.TongChiTieu >= int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThuongXuyen").GiaTri))
             {
-                float TiLeDoi = float.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThuongXuyen").GiaTri);
+                float TiLeDoi = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuongXuyen").GiaTri);
                 float diem = TiLeDoi * TongTien;
                 result = (int)Math.Floor(diem);
             }
-            if (khachhang.TongChiTieu >= int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThanThiet").GiaTri))
+            if (khachhang.TongChiTieu >= int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThanThiet").GiaTri))
             {
-                float TiLeDoi = float.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThanThiet").GiaTri);
+                float TiLeDoi = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThanThiet").GiaTri);
                 float diem = TiLeDoi * TongTien;
                 result = (int)Math.Floor(diem);
             }

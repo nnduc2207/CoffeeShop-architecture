@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoffeeShop.Views"
              xmlns:models="clr-namespace:CoffeeShop.Models"
+             xmlns:converter="clr-namespace:CoffeeShop.Services.Converters"
              xmlns:vm="clr-namespace:CoffeeShop.ViewModels"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              
@@ -26,8 +27,8 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <UserControl.Resources>
-        <models:NumberToVNDConverter x:Key="MoneyConverter"/>
-        <models:DateConverter x:Key="DateConverter"/>
+        <converter:NumberToVNDConverter x:Key="MoneyConverter"/>
+        <converter:DateConverter x:Key="DateConverter"/>
     </UserControl.Resources>
     <Grid>
 

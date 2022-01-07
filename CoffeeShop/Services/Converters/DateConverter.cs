@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace CoffeeShop.Models
+namespace CoffeeShop.Services.Converters
 {
     public class DateConverter : IValueConverter
     {

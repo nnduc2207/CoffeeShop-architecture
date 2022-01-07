@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoffeeShop.Views"
-             xmlns:models="clr-namespace:CoffeeShop.Models"
+             xmlns:services="clr-namespace:CoffeeShop.Services"
              xmlns:vm="clr-namespace:CoffeeShop.ViewModels"
              
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
@@ -70,21 +70,21 @@
                                       Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                                       VerticalAlignment="Center"
                                       FontSize="20" Foreground="SaddleBrown"
-                        models:PasswordBoxAssistant.BindPassword="true"  models:PasswordBoxAssistant.BoundPassword="{Binding Path=PasswordOld, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        services:PasswordBoxAssistant.BindPassword="true"  services:PasswordBoxAssistant.BoundPassword="{Binding Path=PasswordOld, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </PasswordBox>
                         <PasswordBox Margin="5 10"
                                       materialDesign:HintAssist.Hint="MẬT KHẨU MỚI"
                                       Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                                       VerticalAlignment="Center"
                                       FontSize="20" Foreground="SaddleBrown"
-                        models:PasswordBoxAssistant.BindPassword="true"  models:PasswordBoxAssistant.BoundPassword="{Binding Path=PasswordNew, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        services:PasswordBoxAssistant.BindPassword="true"  services:PasswordBoxAssistant.BoundPassword="{Binding Path=PasswordNew, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </PasswordBox>
                         <PasswordBox Margin="5 10"
                                       materialDesign:HintAssist.Hint="NHẬP LẠI MẬT KHẨU MỚI"
                                       Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                                       VerticalAlignment="Center"
                                       FontSize="20" Foreground="SaddleBrown"
-                        models:PasswordBoxAssistant.BindPassword="true"  models:PasswordBoxAssistant.BoundPassword="{Binding Path=PasswordNew2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        services:PasswordBoxAssistant.BindPassword="true"  services:PasswordBoxAssistant.BoundPassword="{Binding Path=PasswordNew2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </PasswordBox>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button

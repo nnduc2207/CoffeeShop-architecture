@@ -119,12 +119,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Global.cs" />
-    <Compile Include="Models\BytesToBitMapConverter.cs" />
+    <Compile Include="Services\ModelServices\ChiTietHoaDonService.cs" />
+    <Compile Include="Services\Converters\BytesToBitMapConverter.cs" />
     <Compile Include="Models\ChiTietHoaDon.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DataProvider.cs" />
-    <Compile Include="Models\DateConverter.cs" />
+    <Compile Include="Services\Converters\DateConverter.cs" />
     <Compile Include="Models\HoaDon.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -155,8 +156,13 @@
     <Compile Include="Models\NguyenLieu.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\NumberToVNDConverter.cs" />
-    <Compile Include="Models\PasswordBoxAssistant.cs" />
+    <Compile Include="Services\ModelServices\HoaDonService.cs" />
+    <Compile Include="Services\ModelServices\KhachHangService.cs" />
+    <Compile Include="Services\Converters\NumberToVNDConverter.cs" />
+    <Compile Include="Services\ModelServices\KhoNguyenLieuService.cs" />
+    <Compile Include="Services\ModelServices\LoaiSanPhamService.cs" />
+    <Compile Include="Services\ModelServices\NguyenLieuService.cs" />
+    <Compile Include="Services\PasswordBoxAssistant.cs" />
     <Compile Include="Models\SanPham.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -166,6 +172,8 @@
     <Compile Include="Models\ThongSo.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Services\ModelServices\SanPhamService.cs" />
+    <Compile Include="Services\ModelServices\ThongSoService.cs" />
     <Compile Include="ViewModels\BasicViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -259,6 +267,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Models\Model.edmx.diagram">
       <DependentUpon>Model.edmx</DependentUpon>
     </None>

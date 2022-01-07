@@ -9,6 +9,7 @@
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:models="clr-namespace:CoffeeShop.Models"
+             xmlns:converter="clr-namespace:CoffeeShop.Services.Converters"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
              TextOptions.TextFormattingMode="Ideal"
@@ -23,8 +24,8 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <UserControl.Resources>
-        <models:BytesToBitMapConverter x:Key="ImageConverter"/>
-        <models:NumberToVNDConverter x:Key="MoneyConverter"/>
+        <converter:BytesToBitMapConverter x:Key="ImageConverter"/>
+        <converter:NumberToVNDConverter x:Key="MoneyConverter"/>
     </UserControl.Resources>
     <Grid>
         <!--Cảnh báo-->

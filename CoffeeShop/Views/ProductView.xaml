@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoffeeShop.Views"
              xmlns:models="clr-namespace:CoffeeShop.Models"
+             xmlns:converter="clr-namespace:CoffeeShop.Services.Converters"
              xmlns:vm="clr-namespace:CoffeeShop.ViewModels"
              
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
@@ -21,8 +22,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="1400">
     <UserControl.Resources>
-        <models:BytesToBitMapConverter x:Key="ImageConverter"/>
-        <models:NumberToVNDConverter x:Key="MoneyConverter"/>
+        <converter:BytesToBitMapConverter x:Key="ImageConverter"/>
+        <converter:NumberToVNDConverter x:Key="MoneyConverter"/>
     </UserControl.Resources>
     <Grid>
 
