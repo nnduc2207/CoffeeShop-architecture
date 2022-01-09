@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.Model;
 using CoffeeShop.Models;
+using CoffeeShop.Services;
 using CoffeeShop.Services.ModelServices;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,8 @@ namespace CoffeeShop.ViewModels
         private static HomeViewModel _instance = null;
         private static object m_lock = new object();
 
-        private AsyncObservableCollection<dynamic> _categories;
+        private Menu _menu;
         private dynamic _selectedCategory;
-        private AsyncObservableCollection<dynamic> _products;
         private dynamic _selectedProduct;
         private AsyncObservableCollection<dynamic> _spendMaterial;
         // Customer
@@ -46,7 +46,15 @@ namespace CoffeeShop.ViewModels
         #endregion
 
         #region properties
-        public AsyncObservableCollection<dynamic> Categories { get => _categories; set { _categories = value; OnPropertyChanged(); } }
+        public Menu Menu
+        {
+            get => _menu;
+            set
+            {
+                _menu = value;
+                OnPropertyChanged();
+            }
+        }
         public dynamic SelectedCategory
         {
             get => _selectedCategory; set
@@ -54,26 +62,11 @@ namespace CoffeeShop.ViewModels
                 _selectedCategory = value;
                 if (value != null)
                 {
-                    int maloai = value.Ma;
-                    Products = new AsyncObservableCollection<dynamic>();
-                    foreach (var item in SanPhamService.GetByType(maloai))
-                    {
-                        if (CartProducts.Where(x=>x.MaSP==item.Ma).Count() == 0)
-                        {
-                            Products.Add(new
-                            {
-                                Ma = item.Ma,
-                                Ten = item.Ten,
-                                Gia = item.Gia,
-                                Anh = item.Anh,
-                            });
-                        }
-                    }
+                    Menu.ChangeProductListByType(value.Ma);
                 }
                 OnPropertyChanged();
             }
         }
-        public AsyncObservableCollection<dynamic> Products { get => _products; set { _products = value; OnPropertyChanged(); } }
         public dynamic SelectedProduct { get => _selectedProduct; set { _selectedProduct = value; OnPropertyChanged(); } }
 
         // Customer
@@ -149,25 +142,14 @@ namespace CoffeeShop.ViewModels
         {
             // Command
             Loaded = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
-
+                Menu = new Menu();
+                SelectedCategory = Menu.CategoryList[0];
                 // khởi tạo dữ liệu
                 // Danh sách loại sản phẩm
-                CartProducts = new AsyncObservableCollection<dynamic>();
                 _spendMaterial = new AsyncObservableCollection<dynamic>();
-                Categories = new AsyncObservableCollection<dynamic>();
-                foreach (var item in LoaiSanPhamService.GetAll())
-                {
-                    Categories.Add(new
-                    {
-                        Ma = item.Ma,
-                        Ten = item.Ten
-                    });
-                }
-                SelectedCategory = Categories.ElementAt(0);
-
+                CartProducts = new AsyncObservableCollection<dynamic>();
                 TongTien = 0;
             });
-
 
             ChangeCategoryCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
                 SelectedCategory = param;
@@ -217,24 +199,24 @@ namespace CoffeeShop.ViewModels
                 {
                     CartProducts.Add(new
                     {
-                        MaSP = param.Ma,
+                        Ma = param.Ma,
                         Ten = param.Ten,
                         Gia = param.Gia,
                         SoLuong = 1,
                         TongGia = param.Gia,
                     });
-                    Products.Remove(param);
+                    Menu.HideProduct(param);
                     TongTien = TongTien + param.Gia;
                 }
             });
 
             ClickIncreaseCartProductButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
-                if (CheckKho(param.MaSP, param.SoLuong + 1) == true)
+                if (CheckKho(param.Ma, param.SoLuong + 1) == true)
                 {
                     AsyncObservableCollection<dynamic> newcartproducts = new AsyncObservableCollection<dynamic>();
                     foreach (var item in CartProducts)
                     {
-                        if (item.MaSP != param.MaSP)
+                        if (item.Ma != param.Ma)
                         {
                             newcartproducts.Add(item);
                         }
@@ -242,7 +224,7 @@ namespace CoffeeShop.ViewModels
                         {
                             newcartproducts.Add(new
                             {
-                                MaSP = param.MaSP,
+                                Ma = param.Ma,
                                 Ten = param.Ten,
                                 Gia = param.Gia,
                                 SoLuong = param.SoLuong + 1,
@@ -256,21 +238,11 @@ namespace CoffeeShop.ViewModels
             });
 
             ClickDecreaseCartProductButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
-                int maSP = param.MaSP;
+                int ma = param.Ma;
                 TongTien = TongTien - param.Gia;
                 if (param.SoLuong == 1)
                 {
-                    SanPham sanpham = SanPhamService.GetById(maSP);
-                    if (SelectedCategory.Ma == sanpham.MaLoai)
-                    {
-                        Products.Add(new
-                        {
-                            Ma = sanpham.Ma,
-                            Ten = sanpham.Ten,
-                            Gia = sanpham.Gia,
-                            Anh = sanpham.Anh,
-                        });
-                    }
+                    Menu.ShowProduct(param);
                     CartProducts.Remove(param);
                 }
                 else
@@ -278,7 +250,7 @@ namespace CoffeeShop.ViewModels
                     AsyncObservableCollection<dynamic> newcartproducts = new AsyncObservableCollection<dynamic>();
                     foreach (var item in CartProducts)
                     {
-                        if (item.MaSP != param.MaSP)
+                        if (item.Ma != param.Ma)
                         {
                             newcartproducts.Add(item);
                         }
@@ -286,7 +258,7 @@ namespace CoffeeShop.ViewModels
                         {
                             newcartproducts.Add(new
                             {
-                                MaSP = param.MaSP,
+                                Ma = param.Ma,
                                 Ten = param.Ten,
                                 Gia = param.Gia,
                                 SoLuong = param.SoLuong - 1,
@@ -297,7 +269,7 @@ namespace CoffeeShop.ViewModels
                     }
                 }
                 // trả lại số nguyên liệu hao tổn
-                foreach (var item in NguyenLieuService.GetByProduct(maSP))
+                foreach (var item in NguyenLieuService.GetByProduct(ma))
                 {
                     if (_spendMaterial.Where(x => x.Ma == item.MaNL).Count() != 0)
                     {

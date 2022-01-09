@@ -119,6 +119,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Global.cs" />
+    <Compile Include="Services\Menu.cs" />
     <Compile Include="Services\ModelServices\ChiTietHoaDonService.cs" />
     <Compile Include="Services\Converters\BytesToBitMapConverter.cs" />
     <Compile Include="Models\ChiTietHoaDon.cs">
