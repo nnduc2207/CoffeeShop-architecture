@@ -296,12 +296,12 @@
 
                 </StackPanel>
                 <!--Loại sản phẩm-->
-                <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
+                <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Menu.CategoryList}" SelectedItem="{Binding Menu.SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="120" Height="50" Padding="0"
+                            <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="100" Height="50" Padding="0"
                                  Command="{Binding ElementName=Categories, Path=DataContext.ChangeCategoryCommand}" CommandParameter="{Binding}">
-                                <Border Background="SaddleBrown" Width="120" Height="50" CornerRadius="15" Margin="0">
+                                <Border Background="SaddleBrown" Width="100" Height="50" CornerRadius="15" Margin="0">
                                     <TextBlock Foreground="SandyBrown"  VerticalAlignment="Center" Text="{Binding Ten}" HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Medium" TextAlignment="Center"></TextBlock>
                                 </Border>
                             </Button>
@@ -315,7 +315,7 @@
                 </ListView>
 
                 <!--List Item-->
-                <ListView Name="Products" ItemsSource="{Binding Products}" HorizontalAlignment="Left"  Width="875" Height="640" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView Name="Products" ItemsSource="{Binding Menu.CurrentMenu}" HorizontalAlignment="Left"  Width="875" Height="640" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="195" Height="240" Padding="0"
