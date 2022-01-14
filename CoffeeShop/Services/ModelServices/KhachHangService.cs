@@ -7,11 +7,45 @@ using CoffeeShop.Model;
 using CoffeeShop.Models;
 using CoffeeShop.Model;
 using CoffeeShop.Models;
+using System.ComponentModel;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class KhachHangService
+    public class KhachHangService : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(String info)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; NotifyPropertyChanged("Ma"); } }
+        private string _ten;
+        public string Ten { get => _ten; set { _ten = value; NotifyPropertyChanged("Ten"); } }
+        private string _sdt;
+        public string SDT { get => _sdt; set { _sdt = value; NotifyPropertyChanged("SDT"); } }
+        private int _diemTichLuy;
+        public int DiemTichLuy { get => _diemTichLuy; set { _diemTichLuy = value; NotifyPropertyChanged("DiemTichLuy"); } }
+        private int _tongChiTieu;
+        public int TongChiTieu { get => _tongChiTieu; set { _tongChiTieu = value; NotifyPropertyChanged("TongChiTieu"); } }
+
+        public ILoaiKhachHang LoaiKhachHang;
+
+        public KhachHangService() { }
+
+        public KhachHangService(KhachHang kh)
+        {
+            Ma = kh.Ma;
+            Ten = kh.Ten;
+            SDT = kh.SDT;
+            DiemTichLuy = kh.DiemTichLuy;
+            TongChiTieu = kh.TongChiTieu;
+            LoaiKhachHang = LoaiKhachHangFactory.create(kh.TongChiTieu);
+        }
+
         static public KhachHang GetById(int id)
         {
             return DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.Ma == id);

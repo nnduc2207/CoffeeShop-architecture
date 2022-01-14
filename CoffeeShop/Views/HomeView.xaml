@@ -103,7 +103,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True" Foreground="#3e2723">
                                 <TextBox.Text>
-                                    <Binding Path="ShowCheckoutCustomerName">
+                                    <Binding Path="MyCart.Customer.Ten">
                                     </Binding>
                                 </TextBox.Text>
                             </TextBox>
@@ -122,7 +122,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True" Foreground="#3e2723">
                                 <TextBox.Text>
-                                    <Binding Path="ShowCheckoutCustomerPoint">
+                                    <Binding Path="MyCart.Customer.DiemTichLuy">
                                     </Binding>
                                 </TextBox.Text>
                             </TextBox>
@@ -141,13 +141,13 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True" Foreground="#3e2723">
                                 <TextBox.Text>
-                                    <Binding Path="ShowCheckoutPoint">
+                                    <Binding Path="MyCart.Point">
                                     </Binding>
                                 </TextBox.Text>
                             </TextBox>
 
                             <!--Cart ListView-->
-                            <ListView Height="auto" MaxHeight="300" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding CartProducts}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+                            <ListView Height="auto" MaxHeight="300" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding MyCart.ProductList}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="Focusable" Value="false"/>
@@ -209,7 +209,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True" Foreground="#3e2723">
                                 <TextBox.Text>
-                                    <Binding Path="TongTien" Converter="{StaticResource MoneyConverter}">
+                                    <Binding Path="MyCart.Total" Converter="{StaticResource MoneyConverter}">
                                     </Binding>
                                 </TextBox.Text>
                             </TextBox>
@@ -228,7 +228,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="False" Foreground="#3e2723">
                                 <TextBox.Text>
-                                    <Binding Path="ShowCheckoutSpendPoint">
+                                    <Binding Path="MyCart.SpendPoint">
                                     </Binding>
                                 </TextBox.Text>
                             </TextBox>
@@ -256,7 +256,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True" Foreground="#3e2723">
                                 <TextBox.Text>
-                                    <Binding Path="ShowCheckoutRealPay" Converter="{StaticResource MoneyConverter}">
+                                    <Binding Path="MyCart.RealPayment" Converter="{StaticResource MoneyConverter}">
                                     </Binding>
                                 </TextBox.Text>
                             </TextBox>
@@ -381,7 +381,7 @@
 
                 <!--Cart ListView-->
                 <ListView x:Name="CartsListView" Height="500" DockPanel.Dock="Top"
-                            ItemsSource="{Binding CartProducts}" SelectedItem="{Binding SelectedCartProduct}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+                            ItemsSource="{Binding MyCart.ProductList}" SelectedItem="{Binding SelectedCartProduct}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Focusable" Value="false"/>
@@ -452,7 +452,7 @@
 
                 <!--Check out-->
                 <Button Margin="30 20 0 20" BorderBrush="#3e2723" Background="#3e2723" BorderThickness="1" Padding="0" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Width="200" Height="80"
-                    Command="{Binding ClickCheckoutButtonCommand}" CommandParameter="{Binding}" Content="{Binding TongTien,Converter={StaticResource MoneyConverter}}" FontSize="30" Foreground="SandyBrown">
+                    Command="{Binding ClickCheckoutButtonCommand}" CommandParameter="{Binding}" Content="{Binding MyCart.Total,Converter={StaticResource MoneyConverter}}" FontSize="30" Foreground="SandyBrown">
 
                 </Button>
             </DockPanel>
