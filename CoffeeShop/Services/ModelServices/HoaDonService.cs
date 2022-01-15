@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,33 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class HoaDonService
+    public class HoaDonService : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(String info)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; NotifyPropertyChanged("Ma"); } }
+        private int _maKH;
+        public int MaKH { get => _maKH; set { _maKH = value; NotifyPropertyChanged("MaKH"); } }
+        private string _ngayTao;
+        public string NgayTao { get => _ngayTao; set { _ngayTao = value; NotifyPropertyChanged("NgayTao"); } }
+        private int _tongTien;
+        public int TongTien { get => _tongTien; set { _tongTien = value; NotifyPropertyChanged("TongTien"); } }
+
+        public HoaDonService(HoaDon hd)
+        {
+            Ma = hd.Ma;
+            MaKH = hd.MaKH.GetValueOrDefault(0);
+            NgayTao = hd.NgayTao.ToString();
+            TongTien = hd.TongTien;
+        }
+
         static public HoaDon GetById(int id)
         {
             return DataProvider.Ins.DB.HoaDon.FirstOrDefault(x => x.Ma == id);

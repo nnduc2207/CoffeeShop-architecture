@@ -119,6 +119,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Global.cs" />
+    <Compile Include="Services\Cart.cs" />
+    <Compile Include="Services\LoaiKhachHangFactory.cs" />
     <Compile Include="Services\Menu.cs" />
     <Compile Include="Services\ModelServices\ChiTietHoaDonService.cs" />
     <Compile Include="Services\Converters\BytesToBitMapConverter.cs" />
@@ -158,9 +160,13 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Services\ModelServices\HoaDonService.cs" />
+    <Compile Include="Services\ILoaiKhachHang.cs" />
     <Compile Include="Services\ModelServices\KhachHangService.cs" />
     <Compile Include="Services\Converters\NumberToVNDConverter.cs" />
     <Compile Include="Services\ModelServices\KhoNguyenLieuService.cs" />
+    <Compile Include="Services\CustomerTypes\KHThanThiet.cs" />
+    <Compile Include="Services\CustomerTypes\KHThuong.cs" />
+    <Compile Include="Services\CustomerTypes\KHThuongXuyen.cs" />
     <Compile Include="Services\ModelServices\LoaiSanPhamService.cs" />
     <Compile Include="Services\ModelServices\NguyenLieuService.cs" />
     <Compile Include="Services\PasswordBoxAssistant.cs" />

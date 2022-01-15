@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,36 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class ChiTietHoaDonService
+    public class ChiTietHoaDonService : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(String info)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; NotifyPropertyChanged("Ma"); } }
+        private int _maHD;
+        public int MaHD { get => _maHD; set { _maHD = value; NotifyPropertyChanged("MaHD"); } }
+        private string _tenSP;
+        public string TenSP { get => _tenSP; set { _tenSP = value; NotifyPropertyChanged("TenSP"); } }
+        private int _giaSP;
+        public int GiaSP { get => _giaSP; set { _giaSP = value; NotifyPropertyChanged("GiaSP"); } }
+        private int _soLuong;
+        public int SoLuong { get => _soLuong; set { _soLuong = value; NotifyPropertyChanged("SoLuong"); } }
+
+        public ChiTietHoaDonService(ChiTietHoaDon cthd)
+        {
+            Ma = cthd.Ma;
+            MaHD = cthd.MaHD;
+            TenSP = cthd.TenSP;
+            GiaSP = cthd.GiaSP;
+            SoLuong = cthd.SoLuong;
+        }
+
         static public ChiTietHoaDon GetById(int maHd, int ma)
         {
             return DataProvider.Ins.DB.ChiTietHoaDon.FirstOrDefault(x => x.MaHD == maHd && x.Ma == ma);
