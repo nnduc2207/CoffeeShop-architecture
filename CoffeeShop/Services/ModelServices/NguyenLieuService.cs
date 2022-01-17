@@ -8,48 +8,85 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class NguyenLieuService
+    public class NguyenLieuService : NotifyPropertyChanged
     {
-        static public NguyenLieu GetById(int maNL, int maSP)
+        private int _maNL;
+        public int MaNL { get => _maNL; set { _maNL = value; OnPropertyChanged(); } }
+        private int _maSP;
+        public int MaSP { get => _maSP; set { _maSP = value; OnPropertyChanged(); } }
+        private int _soLuong;
+        public int SoLuong { get => _soLuong; set { _soLuong = value; OnPropertyChanged(); } }
+
+        public NguyenLieuService() { }
+
+        public NguyenLieuService(NguyenLieu nl)
         {
-            return DataProvider.Ins.DB.NguyenLieu.FirstOrDefault(x => x.MaNL == maNL && x.MaSP == maSP);
+            this.MaNL = nl.MaNL;
+            this.MaSP = nl.MaSP;
+            this.SoLuong = nl.SoLuong;
         }
 
-        static public List<NguyenLieu> GetByGradient(int maNL)
+        static public NguyenLieuService GetById(int maNL, int maSP)
         {
-            return DataProvider.Ins.DB.NguyenLieu.Where(x => x.MaNL == maNL).ToList();
+            NguyenLieu nl = DataProvider.Ins.DB.NguyenLieu.FirstOrDefault(x => x.MaNL == maNL && x.MaSP == maSP);
+            return nl == null ? null : new NguyenLieuService(nl);
         }
 
-        static public List<NguyenLieu> GetByProduct(int maSP)
+        static public List<NguyenLieuService> GetByGradient(int maNL)
         {
-            return DataProvider.Ins.DB.NguyenLieu.Where(x => x.MaSP == maSP).ToList();
+            List<NguyenLieuService> res = new List<NguyenLieuService>();
+            foreach (NguyenLieu item in DataProvider.Ins.DB.NguyenLieu.Where(x => x.MaNL == maNL).ToList())
+            {
+                res.Add(new NguyenLieuService(item));
+            }
+            return res;
         }
 
-        static public List<NguyenLieu> GetAll()
+        static public List<NguyenLieuService> GetByProduct(int maSP)
         {
-            return DataProvider.Ins.DB.NguyenLieu.ToList();
+            List<NguyenLieuService> res = new List<NguyenLieuService>();
+            foreach (NguyenLieu item in DataProvider.Ins.DB.NguyenLieu.Where(x => x.MaSP == maSP).ToList())
+            {
+                res.Add(new NguyenLieuService(item));
+            }
+            return res;
         }
 
-        static public NguyenLieu Create(int masp, int manl, int soluong)
+        static public List<NguyenLieuService> GetAll()
+        {
+            List<NguyenLieuService> res = new List<NguyenLieuService>();
+            foreach (NguyenLieu item in DataProvider.Ins.DB.NguyenLieu.ToList())
+            {
+                res.Add(new NguyenLieuService(item));
+            }
+            return res;
+        }
+
+        public NguyenLieuService Create()
         {
             NguyenLieu newnl = new NguyenLieu
             {
-                MaNL = manl,
-                MaSP = masp,
-                SoLuong = soluong,
+                MaNL = this.MaNL,
+                MaSP = this.MaSP,
+                SoLuong = this.SoLuong,
             };
             DataProvider.Ins.DB.NguyenLieu.Add(newnl);
             DataProvider.Ins.DB.SaveChanges();
-            return newnl;
+            return new NguyenLieuService(newnl);
         } 
 
-        static public void Update()
+        public void Update()
         {
+            NguyenLieu nl = DataProvider.Ins.DB.NguyenLieu.FirstOrDefault(x => x.MaNL == this.MaNL && x.MaSP == this.MaSP);
+            nl.MaNL = this.MaNL;
+            nl.MaSP = this.MaSP;
+            nl.SoLuong = this.SoLuong;
             DataProvider.Ins.DB.SaveChanges();
         }
 
-        static public void Delete(NguyenLieu nguyenlieu)
+        public void Delete()
         {
+            NguyenLieu nguyenlieu = DataProvider.Ins.DB.NguyenLieu.FirstOrDefault(x => x.MaNL == this.MaNL && x.MaSP == this.MaSP);
             DataProvider.Ins.DB.NguyenLieu.Remove(nguyenlieu);
             DataProvider.Ins.DB.SaveChanges();
         }

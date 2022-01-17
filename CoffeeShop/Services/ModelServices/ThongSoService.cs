@@ -8,20 +8,43 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class ThongSoService
+    public class ThongSoService : NotifyPropertyChanged
     {
-        static public ThongSo GetById(int id)
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
+        private string _ten;
+        public string Ten { get => _ten; set { _ten = value; OnPropertyChanged(); } }
+        private string _giaTri;
+        public string GiaTri { get => _giaTri; set { _giaTri = value; OnPropertyChanged(); } }
+        private string _kieu;
+        public string Kieu { get => _kieu; set { _kieu = value; OnPropertyChanged(); } }
+
+        public ThongSoService() { }
+
+        public ThongSoService(ThongSo ts)
         {
-            return DataProvider.Ins.DB.ThongSo.FirstOrDefault(x => x.Ma == id);
+            this.Ma = ts.Ma;
+            this.Ten = ts.Ten;
+            this.GiaTri = ts.GiaTri;
+            this.Kieu = ts.Kieu;
         }
 
-        static public ThongSo GetByName(string name)
+        static public ThongSoService GetById(int id)
         {
-            return DataProvider.Ins.DB.ThongSo.FirstOrDefault(x => x.Ten == name);
+            ThongSo ts = DataProvider.Ins.DB.ThongSo.FirstOrDefault(x => x.Ma == id);
+            return ts == null ? null : new ThongSoService(ts);
         }
 
-        static public void Update()
+        static public ThongSoService GetByName(string name)
         {
+            ThongSo ts = DataProvider.Ins.DB.ThongSo.FirstOrDefault(x => x.Ten == name);
+            return ts == null ? null : new ThongSoService(ts);
+        }
+
+        public void Update()
+        {
+            ThongSo ts = DataProvider.Ins.DB.ThongSo.FirstOrDefault(x => x.Ma == this.Ma);
+            ts.GiaTri = this.GiaTri;
             DataProvider.Ins.DB.SaveChanges();
         }
     }

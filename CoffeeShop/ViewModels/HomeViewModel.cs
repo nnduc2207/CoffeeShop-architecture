@@ -139,7 +139,7 @@ namespace CoffeeShop.ViewModels
                 {
                     if (IsCustomer == true)
                     {
-                        KhachHang khachhang = KhachHangService.GetByPhone(CustomerPhone);
+                        KhachHangService khachhang = KhachHangService.GetByPhone(CustomerPhone);
                         if (khachhang == null)
                         {
                             Alert("Khách hàng mới");
@@ -148,7 +148,7 @@ namespace CoffeeShop.ViewModels
                         else
                         {
                             CustomerName = khachhang.Ten;
-                            MyCart.Customer = new KhachHangService(khachhang);
+                            MyCart.Customer = khachhang;
                             HasCustomer = true;
                         }
                     }
@@ -156,7 +156,10 @@ namespace CoffeeShop.ViewModels
                     {
                         if (CustomerName != null && CustomerName.Split(' ').Length != CustomerName.Length + 1)
                         {
-                            MyCart.Customer = new KhachHangService(KhachHangService.Create(CustomerName, CustomerPhone));
+                            MyCart.Customer = new KhachHangService();
+                            MyCart.Customer.Ten = CustomerName;
+                            MyCart.Customer.SDT = CustomerPhone;
+                            MyCart.Customer = MyCart.Customer.Create();
                             HasCustomer = true;
                             IsCustomer = true;
                         }

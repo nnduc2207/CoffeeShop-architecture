@@ -10,40 +10,74 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class SanPhamService
+    public class SanPhamService : NotifyPropertyChanged
     {
-        static public SanPham GetById(int id)
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
+        private string _ten;
+        public string Ten { get => _ten; set { _ten = value; OnPropertyChanged(); } }
+        private byte[] _anh;
+        public byte[] Anh { get => _anh; set { _anh = value; OnPropertyChanged(); } }
+        private int _gia;
+        public int Gia { get => _gia; set { _gia = value; OnPropertyChanged(); } }
+        private int _maLoai;
+        public int MaLoai { get => _maLoai; set { _maLoai = value; OnPropertyChanged(); } }
+
+        public SanPhamService() { }
+
+        public SanPhamService(SanPham sp)
         {
-            return DataProvider.Ins.DB.SanPham.FirstOrDefault(x => x.Ma == id);
+            this.Ma = sp.Ma;
+            this.Ten = sp.Ten;
+            this.Anh = sp.Anh;
+            this.Gia = sp.Gia;
+            this.MaLoai = sp.MaLoai;
         }
 
-        static public List<SanPham> GetAll()
+        static public SanPhamService GetById(int id)
         {
-            return DataProvider.Ins.DB.SanPham.ToList();
+            SanPham sp = DataProvider.Ins.DB.SanPham.FirstOrDefault(x => x.Ma == id);
+            return sp == null ? null : new SanPhamService(sp);
+        }
+
+        static public List<SanPhamService> GetAll()
+        {
+            List<SanPhamService> res = new List<SanPhamService>();
+            foreach (SanPham item in DataProvider.Ins.DB.SanPham.ToList())
+            {
+                res.Add(new SanPhamService(item));
+            }
+            return res;
         }
         
-        static public SanPham Create(string name, string imageDir, int price, int typeid)
+        public SanPhamService Create(string imageDir)
         {
             SanPham newsp = new SanPham
             {
                 Ma = DataProvider.Ins.DB.SanPham.Count() == 0 ? 1 : DataProvider.Ins.DB.SanPham.Max(x => x.Ma) + 1,
-                Ten = name,
+                Ten = this.Ten,
                 Anh = ImageToBytes(imageDir),
-                Gia = price,
-                MaLoai = typeid,
+                Gia = this.Gia,
+                MaLoai = this.MaLoai,
             };
             DataProvider.Ins.DB.SanPham.Add(newsp);
             DataProvider.Ins.DB.SaveChanges();
-            return newsp;
+            return new SanPhamService(newsp);
         }
 
-        static public void Update()
+        public void Update()
         {
+            SanPham sanpham = DataProvider.Ins.DB.SanPham.FirstOrDefault(x => x.Ma == this.Ma);
+            sanpham.Ten = this.Ten;
+            sanpham.Anh = this.Anh;
+            sanpham.Gia = this.Gia;
+            sanpham.MaLoai = this.MaLoai;
             DataProvider.Ins.DB.SaveChanges();
         }
 
-        static public void Delete(SanPham sanpham)
+        public void Delete()
         {
+            SanPham sanpham = DataProvider.Ins.DB.SanPham.FirstOrDefault(x => x.Ma == this.Ma);
             DataProvider.Ins.DB.SanPham.Remove(sanpham);
             DataProvider.Ins.DB.SaveChanges();
         }
@@ -60,9 +94,14 @@ namespace CoffeeShop.Services.ModelServices
             return memStream.ToArray();
         }
 
-        internal static List<SanPham> GetByType(int maloai)
+        internal static List<SanPhamService> GetByType(int maloai)
         {
-            return DataProvider.Ins.DB.SanPham.Where(x => x.MaLoai == maloai).ToList();
+            List<SanPhamService> res = new List<SanPhamService>();
+            foreach (SanPham item in DataProvider.Ins.DB.SanPham.Where(x => x.MaLoai == maloai).ToList())
+            {
+                res.Add(new SanPhamService(item));
+            }
+            return res;
         }
     }
 }

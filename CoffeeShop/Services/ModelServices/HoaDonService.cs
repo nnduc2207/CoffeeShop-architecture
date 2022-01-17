@@ -9,24 +9,20 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class HoaDonService : INotifyPropertyChanged
+    public class HoaDonService : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
         private int _ma;
-        public int Ma { get => _ma; set { _ma = value; NotifyPropertyChanged("Ma"); } }
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
         private int _maKH;
-        public int MaKH { get => _maKH; set { _maKH = value; NotifyPropertyChanged("MaKH"); } }
+        public int MaKH { get => _maKH; set { _maKH = value; OnPropertyChanged(); } }
         private string _ngayTao;
-        public string NgayTao { get => _ngayTao; set { _ngayTao = value; NotifyPropertyChanged("NgayTao"); } }
+        public string NgayTao { get => _ngayTao; set { _ngayTao = value; OnPropertyChanged(); } }
         private int _tongTien;
-        public int TongTien { get => _tongTien; set { _tongTien = value; NotifyPropertyChanged("TongTien"); } }
+        public int TongTien { get => _tongTien; set { _tongTien = value; OnPropertyChanged(); } }
+        private int _diemTichLuy;
+        public int DiemTichLuy { get => _diemTichLuy; set { _diemTichLuy = value; OnPropertyChanged(); } }
+
+        public HoaDonService() { }
 
         public HoaDonService(HoaDon hd)
         {
@@ -34,39 +30,47 @@ namespace CoffeeShop.Services.ModelServices
             MaKH = hd.MaKH.GetValueOrDefault(0);
             NgayTao = hd.NgayTao.ToString();
             TongTien = hd.TongTien;
+            DiemTichLuy = hd.DiemTichLuy.HasValue ? hd.DiemTichLuy.Value : 0;
         }
 
-        static public HoaDon GetById(int id)
+        static public HoaDonService GetById(int id)
         {
-            return DataProvider.Ins.DB.HoaDon.FirstOrDefault(x => x.Ma == id);
+            HoaDon hd = DataProvider.Ins.DB.HoaDon.FirstOrDefault(x => x.Ma == id);
+            return hd == null ? null : new HoaDonService(hd);
         }
 
-        static public List<HoaDon> GetAll()
+        static public List<HoaDonService> GetAll()
         {
-            return DataProvider.Ins.DB.HoaDon.ToList();
+            List<HoaDonService> res = new List<HoaDonService>();
+            foreach (HoaDon item in DataProvider.Ins.DB.HoaDon.ToList())
+            {
+                res.Add(new HoaDonService(item));
+            }
+            return res;
         }
-        static public HoaDon Create(int tongtien, int diemtichluy = 0, int makh = 0)
+        public HoaDonService Create()
         {
             int mahd = DataProvider.Ins.DB.HoaDon.Count() == 0 ? 1 : DataProvider.Ins.DB.HoaDon.Max(x => x.Ma) + 1;
             HoaDon newHD = new HoaDon
             {
                 Ma = mahd,
                 NgayTao = DateTime.Now,
-                TongTien = tongtien,
-                DiemTichLuy = diemtichluy,
+                TongTien = this.TongTien,
+                DiemTichLuy = this.DiemTichLuy,
             };
-            if (makh != 0)
+            if (this.MaKH != 0)
             {
-                newHD.MaKH = makh;
-                newHD.DiemTichLuy = diemtichluy;
+                newHD.MaKH = this.MaKH;
+                newHD.DiemTichLuy = this.DiemTichLuy;
             }
             DataProvider.Ins.DB.HoaDon.Add(newHD);
             DataProvider.Ins.DB.SaveChanges();
-            return newHD;
+            return new HoaDonService(newHD);
         }
 
-        static public void Delete(HoaDon hoadon)
+        public void Delete()
         {
+            HoaDon hoadon = DataProvider.Ins.DB.HoaDon.FirstOrDefault(x => x.Ma == this.Ma);
             DataProvider.Ins.DB.HoaDon.Remove(hoadon);
             DataProvider.Ins.DB.SaveChanges();
         }

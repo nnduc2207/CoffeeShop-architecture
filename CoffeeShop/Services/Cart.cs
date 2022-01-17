@@ -10,16 +10,8 @@ using System.Threading.Tasks;
 
 namespace CoffeeShop.Services
 {
-    public class Cart : INotifyPropertyChanged
+    public class Cart : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
         static private Cart _instance = null;
         private KhachHangService _customer = new KhachHangService();
         private List<int> _productIdList = new List<int>();
@@ -32,35 +24,45 @@ namespace CoffeeShop.Services
         private int _spendPoint = 0;
         private int _realPayment = 0;
 
-        public KhachHangService Customer { get => _customer; set { _customer = value; Point = CalculatePoint(); NotifyPropertyChanged("Customer"); } }
+        public KhachHangService Customer { get => _customer; set { _customer = value; Point = CalculatePoint(); OnPropertyChanged(); } }
         public AsyncObservableCollection<dynamic> ProductList
         {
             get => _productList;
             set
             {
                 _productList = value;
-                NotifyPropertyChanged("ProductList");
+                OnPropertyChanged();
             }
         }
         public int Total { get => _total; set { 
                 _total = value; 
                 RealPayment = value; 
-                Point = CalculatePoint(); 
-                NotifyPropertyChanged("Total"); } }
-        public int Point { get => _point; set { _point = value; NotifyPropertyChanged("Point"); } }
+                Point = CalculatePoint();
+                OnPropertyChanged(); } }
+        public int Point { get => _point; set { _point = value; OnPropertyChanged(); } }
         public int SpendPoint { get => _spendPoint; set {
-                if (value < 0)
+                if (value <= 0)
                 {
                     value = 0;
+                    Point = CalculatePoint();
                 }
-                _spendPoint = value;
-                RealPayment -= value * 1000;
                 if (value > 0)
                 {
                     Point = 0;
                 }
-                NotifyPropertyChanged("SpendPoint"); } }
-        public int RealPayment { get => _realPayment; set { _realPayment = value; NotifyPropertyChanged("RealPayment"); } }
+                if (value * 1000 > RealPayment)
+                {
+                    value = RealPayment / 1000;
+                }
+                if (value > Customer.DiemTichLuy)
+                {
+                    value = Customer.DiemTichLuy;
+                }
+                RealPayment += _spendPoint * 1000;
+                RealPayment -= value * 1000;
+                _spendPoint = value;
+                OnPropertyChanged(); } }
+        public int RealPayment { get => _realPayment; set { _realPayment = value; OnPropertyChanged(); } }
 
         private Cart()
         {
@@ -86,7 +88,7 @@ namespace CoffeeShop.Services
             {
                 _productIdList.Add(maSP);
                 _productCount.Add(maSP, 1);
-                SanPham sanpham = SanPhamService.GetById(maSP);
+                SanPhamService sanpham = SanPhamService.GetById(maSP);
                 ProductList.Add(new
                 {
                     Ma = sanpham.Ma,
@@ -130,7 +132,7 @@ namespace CoffeeShop.Services
 
         private void CalculateReturnMaterial(int maSP)
         {
-            foreach (NguyenLieu item in NguyenLieuService.GetByProduct(maSP))
+            foreach (NguyenLieuService item in NguyenLieuService.GetByProduct(maSP))
             {
                 _spendMaterialDic[item.MaNL] -= item.SoLuong;
             }
@@ -143,7 +145,7 @@ namespace CoffeeShop.Services
             {
                 if (_productCount[ma] != 0)
                 {
-                    SanPham sanpham = SanPhamService.GetById(ma);
+                    SanPhamService sanpham = SanPhamService.GetById(ma);
                     ProductList.Add(new
                     {
                         Ma = sanpham.Ma,
@@ -161,7 +163,7 @@ namespace CoffeeShop.Services
             return CalculateSpendMaterial(0, NguyenLieuService.GetByProduct(maSP));
         }
 
-        private bool CalculateSpendMaterial(int v, List<NguyenLieu> nguyenLieus)
+        private bool CalculateSpendMaterial(int v, List<NguyenLieuService> nguyenLieus)
         {
             // Dieu kien dung de qui
             if (v == nguyenLieus.Count())
@@ -180,7 +182,7 @@ namespace CoffeeShop.Services
             }
 
             // Kiemr tra kho nguyen lieu
-            if (_spendMaterialDic[nguyenLieus[v].MaNL] > nguyenLieus[v].KhoNguyenLieu.SoLuong)
+            if (_spendMaterialDic[nguyenLieus[v].MaNL] > KhoNguyenLieuService.GetById(nguyenLieus[v].MaNL).SoLuong)
             {
                 return false;
             }
@@ -204,28 +206,34 @@ namespace CoffeeShop.Services
             }
             if (Customer.Ma != 0)
             {
-                KhachHang kh = KhachHangService.GetById(Customer.Ma);
-                kh.TongChiTieu += RealPayment;
-                kh.DiemTichLuy += Point - SpendPoint;
-                KhachHangService.Update();
+                Customer.TongChiTieu += RealPayment;
+                Customer.DiemTichLuy += Point - SpendPoint;
+                Customer.Update();
             }
-            HoaDon hd = HoaDonService.Create(RealPayment, Point, Customer.Ma);
+            HoaDonService hd = new HoaDonService();
+            hd.MaKH = Customer.Ma;
+            hd.TongTien = RealPayment;
+            hd.DiemTichLuy = Point;
+            hd = hd.Create();
             foreach (int id in _productIdList)
             {
                 if (_productCount.ContainsKey(id) && _productCount[id] > 0)
                 {
-                    SanPham sp = SanPhamService.GetById(id);
-                    ChiTietHoaDonService.Create(hd.Ma, sp.Ten, _productCount[id], sp.Gia);
+                    SanPhamService sp = SanPhamService.GetById(id);
+                    ChiTietHoaDonService cthd = new ChiTietHoaDonService();
+                    cthd.MaHD = hd.Ma;
+                    cthd.TenSP = sp.Ten;
+                    cthd.SoLuong = _productCount[id];
+                    cthd.GiaSP = sp.Gia;
+                    cthd = cthd.Create();
                 }
             }
-            foreach (KhoNguyenLieu nl in KhoNguyenLieuService.GetAll())
+            foreach (int manl in _spendMaterialDic.Keys)
             {
-                if (_spendMaterialDic.ContainsKey(nl.MaNL))
-                {
-                    nl.SoLuong -= _spendMaterialDic[nl.MaNL];
-                }
+                KhoNguyenLieuService nl = KhoNguyenLieuService.GetById(manl);
+                nl.SoLuong -= _spendMaterialDic[manl];
+                nl.Update();
             }
-            KhoNguyenLieuService.Update();
         }
     }
 }

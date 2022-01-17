@@ -11,26 +11,18 @@ using System.ComponentModel;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class KhachHangService : INotifyPropertyChanged
+    public class KhachHangService : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
         private int _ma;
-        public int Ma { get => _ma; set { _ma = value; NotifyPropertyChanged("Ma"); } }
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
         private string _ten;
-        public string Ten { get => _ten; set { _ten = value; NotifyPropertyChanged("Ten"); } }
+        public string Ten { get => _ten; set { _ten = value; OnPropertyChanged(); } }
         private string _sdt;
-        public string SDT { get => _sdt; set { _sdt = value; NotifyPropertyChanged("SDT"); } }
+        public string SDT { get => _sdt; set { _sdt = value; OnPropertyChanged(); } }
         private int _diemTichLuy;
-        public int DiemTichLuy { get => _diemTichLuy; set { _diemTichLuy = value; NotifyPropertyChanged("DiemTichLuy"); } }
+        public int DiemTichLuy { get => _diemTichLuy; set { _diemTichLuy = value; OnPropertyChanged(); } }
         private int _tongChiTieu;
-        public int TongChiTieu { get => _tongChiTieu; set { _tongChiTieu = value; NotifyPropertyChanged("TongChiTieu"); } }
+        public int TongChiTieu { get => _tongChiTieu; set { _tongChiTieu = value; OnPropertyChanged(); } }
 
         public ILoaiKhachHang LoaiKhachHang;
 
@@ -46,43 +38,56 @@ namespace CoffeeShop.Services.ModelServices
             LoaiKhachHang = LoaiKhachHangFactory.create(kh.TongChiTieu);
         }
 
-        static public KhachHang GetById(int id)
+        static public KhachHangService GetById(int id)
         {
-            return DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.Ma == id);
+            KhachHang kh = DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.Ma == id);
+            return kh == null ? null : new KhachHangService(kh);
         }
 
-        static public KhachHang GetByPhone(string phonenumber)
+        static public KhachHangService GetByPhone(string phonenumber)
         {
-            return DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.SDT == phonenumber);
+            KhachHang kh = DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.SDT == phonenumber);
+            return kh == null ? null : new KhachHangService(kh);
         }
 
-        static public List<KhachHang> GetAll()
+        static public List<KhachHangService> GetAll()
         {
-            return DataProvider.Ins.DB.KhachHang.ToList();
+            List<KhachHangService> res = new List<KhachHangService>();
+            foreach (KhachHang item in DataProvider.Ins.DB.KhachHang.ToList())
+            {
+                res.Add(new KhachHangService(item));
+            }
+            return res;
         }
 
-        static public KhachHang Create(string name, string sdt)
+        public KhachHangService Create()
         {
             KhachHang newkh = new KhachHang
             {
                 Ma = (DataProvider.Ins.DB.KhachHang.Count() == 0) ? 1 : DataProvider.Ins.DB.KhachHang.Max(x => x.Ma) + 1,
-                Ten = name,
-                SDT = sdt,
+                Ten = this.Ten,
+                SDT = this.SDT,
                 DiemTichLuy = 0,
                 TongChiTieu = 0,
             };
             DataProvider.Ins.DB.KhachHang.Add(newkh);
             DataProvider.Ins.DB.SaveChanges();
-            return newkh;
+            return new KhachHangService(newkh);
         }
 
-        static public void Update()
+        public void Update()
         {
+            KhachHang kh = DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.Ma == this.Ma);
+            kh.Ten = this.Ten;
+            kh.SDT = this.SDT;
+            kh.TongChiTieu = this.TongChiTieu;
+            kh.DiemTichLuy = this.DiemTichLuy;
             DataProvider.Ins.DB.SaveChanges();
         }
 
-        static public void Delete(KhachHang khachhang)
+        public void Delete()
         {
+            KhachHang khachhang = DataProvider.Ins.DB.KhachHang.FirstOrDefault(x => x.Ma == this.Ma);
             DataProvider.Ins.DB.KhachHang.Remove(khachhang);
             DataProvider.Ins.DB.SaveChanges();
         }

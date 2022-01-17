@@ -9,26 +9,20 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class ChiTietHoaDonService : INotifyPropertyChanged
+    public class ChiTietHoaDonService : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
         private int _ma;
-        public int Ma { get => _ma; set { _ma = value; NotifyPropertyChanged("Ma"); } }
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
         private int _maHD;
-        public int MaHD { get => _maHD; set { _maHD = value; NotifyPropertyChanged("MaHD"); } }
+        public int MaHD { get => _maHD; set { _maHD = value; OnPropertyChanged(); } }
         private string _tenSP;
-        public string TenSP { get => _tenSP; set { _tenSP = value; NotifyPropertyChanged("TenSP"); } }
+        public string TenSP { get => _tenSP; set { _tenSP = value; OnPropertyChanged(); } }
         private int _giaSP;
-        public int GiaSP { get => _giaSP; set { _giaSP = value; NotifyPropertyChanged("GiaSP"); } }
+        public int GiaSP { get => _giaSP; set { _giaSP = value; OnPropertyChanged(); } }
         private int _soLuong;
-        public int SoLuong { get => _soLuong; set { _soLuong = value; NotifyPropertyChanged("SoLuong"); } }
+        public int SoLuong { get => _soLuong; set { _soLuong = value; OnPropertyChanged(); } }
+
+        public ChiTietHoaDonService() { }
 
         public ChiTietHoaDonService(ChiTietHoaDon cthd)
         {
@@ -39,38 +33,50 @@ namespace CoffeeShop.Services.ModelServices
             SoLuong = cthd.SoLuong;
         }
 
-        static public ChiTietHoaDon GetById(int maHd, int ma)
+        static public ChiTietHoaDonService GetById(int maHd, int ma)
         {
-            return DataProvider.Ins.DB.ChiTietHoaDon.FirstOrDefault(x => x.MaHD == maHd && x.Ma == ma);
+            ChiTietHoaDon cthd = DataProvider.Ins.DB.ChiTietHoaDon.FirstOrDefault(x => x.MaHD == maHd && x.Ma == ma);
+            return cthd == null ? null : new ChiTietHoaDonService(cthd);
         }
 
-        static public List<ChiTietHoaDon> GetByHoaDon(int maHd)
+        static public List<ChiTietHoaDonService> GetByHoaDon(int maHd)
         {
-            return DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == maHd).ToList();
+            List<ChiTietHoaDonService> res = new List<ChiTietHoaDonService>();
+            foreach (ChiTietHoaDon item in DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == maHd).ToList())
+            {
+                res.Add(new ChiTietHoaDonService(item));
+            }
+            return res;
         }
 
-        static public List<ChiTietHoaDon> GetAll()
+        static public List<ChiTietHoaDonService> GetAll()
         {
-            return DataProvider.Ins.DB.ChiTietHoaDon.ToList();
+            List<ChiTietHoaDonService> res = new List<ChiTietHoaDonService>();
+            foreach (ChiTietHoaDon item in DataProvider.Ins.DB.ChiTietHoaDon.ToList())
+            {
+                res.Add(new ChiTietHoaDonService(item));
+            }
+            return res;
         }
 
-        static public ChiTietHoaDon Create(int maHd, string tenSP, int soluong, int gia)
+        public ChiTietHoaDonService Create()
         {
             ChiTietHoaDon newCthd = new ChiTietHoaDon
             {
-                MaHD = maHd,
-                Ma = DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == maHd).Count() == 0 ? 1 : DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == maHd).Max(x => x.Ma) + 1,
-                TenSP = tenSP,
-                SoLuong = soluong,
-                GiaSP = gia
+                MaHD = this.MaHD,
+                Ma = DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == this.MaHD).Count() == 0 ? 1 : DataProvider.Ins.DB.ChiTietHoaDon.Where(x => x.MaHD == this.MaHD).Max(x => x.Ma) + 1,
+                TenSP = this.TenSP,
+                SoLuong = this.SoLuong,
+                GiaSP = this.GiaSP
             };
             DataProvider.Ins.DB.ChiTietHoaDon.Add(newCthd);
             DataProvider.Ins.DB.SaveChanges();
-            return newCthd;
+            return new ChiTietHoaDonService(newCthd);
         }
 
-        static public void Delete(ChiTietHoaDon cthd)
+        public void Delete()
         {
+            ChiTietHoaDon cthd = DataProvider.Ins.DB.ChiTietHoaDon.FirstOrDefault(x => x.MaHD == this.MaHD && x.Ma == this.Ma);
             DataProvider.Ins.DB.ChiTietHoaDon.Remove(cthd);
             DataProvider.Ins.DB.SaveChanges();
         }

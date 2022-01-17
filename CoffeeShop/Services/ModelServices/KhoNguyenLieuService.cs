@@ -8,11 +8,30 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class KhoNguyenLieuService
+    public class KhoNguyenLieuService : NotifyPropertyChanged
     {
-        static public KhoNguyenLieu GetById(int id)
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
+        private string _ten;
+        public string Ten { get => _ten; set { _ten = value; OnPropertyChanged(); } }
+        private int _soLuong;
+        public int SoLuong { get => _soLuong; set { _soLuong = value; OnPropertyChanged(); } }
+        private string _donVi;
+        public string DonVi { get => _donVi; set { _donVi = value; OnPropertyChanged(); } }
+
+        public KhoNguyenLieuService() { }
+
+        public KhoNguyenLieuService(KhoNguyenLieu knl)
         {
-            return DataProvider.Ins.DB.KhoNguyenLieu.FirstOrDefault(x => x.MaNL == id);
+            this.Ma = knl.MaNL;
+            this.Ten = knl.Ten;
+            this.SoLuong = knl.SoLuong;
+            this.DonVi = knl.DonVi;
+        }
+
+        static public KhoNguyenLieuService GetById(int id)
+        {
+            return new KhoNguyenLieuService(DataProvider.Ins.DB.KhoNguyenLieu.FirstOrDefault(x => x.MaNL == id));
         }
 
         static public List<KhoNguyenLieu> GetAll()
@@ -20,27 +39,44 @@ namespace CoffeeShop.Services.ModelServices
             return DataProvider.Ins.DB.KhoNguyenLieu.ToList();
         }
 
-        static public KhoNguyenLieu Create(string name, int soluong, string donvi)
+        public KhoNguyenLieuService Create()
         {
+            if (this.Ten == null || this.Ten.Split(' ').Length == this.Ten.Length + 1)
+            {
+                throw new Exception("Vui lòng không để trống tên nguyên liệu");
+            }
+            if (this.SoLuong < 0)
+            {
+                throw new Exception("Vui lòng đặt số lượng hợp lý");
+            }
+            if (this.DonVi == null || this.DonVi.Split(' ').Length == this.DonVi.Length + 1)
+            {
+                throw new Exception("Vui lòng không để trống tên đơn vị");
+            }
             KhoNguyenLieu newknl = new KhoNguyenLieu
             {
                 MaNL = DataProvider.Ins.DB.KhoNguyenLieu.Count() == 0 ? 1 : DataProvider.Ins.DB.KhoNguyenLieu.Max(x => x.MaNL) + 1,
-                Ten = name,
-                SoLuong = soluong,
-                DonVi = donvi,
+                Ten = this.Ten,
+                SoLuong = this.SoLuong,
+                DonVi = this.DonVi,
             };
             DataProvider.Ins.DB.KhoNguyenLieu.Add(newknl);
             DataProvider.Ins.DB.SaveChanges();
-            return newknl;
+            return new KhoNguyenLieuService(newknl);
         }   
 
-        static public void Update()
+        public void Update()
         {
+            KhoNguyenLieu knl = DataProvider.Ins.DB.KhoNguyenLieu.FirstOrDefault(x => x.MaNL == this.Ma);
+            knl.SoLuong = this.SoLuong;
+            knl.Ten = this.Ten;
+            knl.DonVi = this.DonVi;
             DataProvider.Ins.DB.SaveChanges();
         }
 
-        static public void Delete(KhoNguyenLieu knl)
+        public void Delete()
         {
+            KhoNguyenLieu knl = DataProvider.Ins.DB.KhoNguyenLieu.FirstOrDefault(x => x.MaNL == this.Ma);
             DataProvider.Ins.DB.KhoNguyenLieu.Remove(knl);
             DataProvider.Ins.DB.SaveChanges();
         }

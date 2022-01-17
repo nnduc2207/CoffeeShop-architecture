@@ -120,6 +120,7 @@
     </ApplicationDefinition>
     <Compile Include="Global.cs" />
     <Compile Include="Services\Cart.cs" />
+    <Compile Include="Services\NotifyPropertyChanged.cs" />
     <Compile Include="Services\LoaiKhachHangFactory.cs" />
     <Compile Include="Services\Menu.cs" />
     <Compile Include="Services\ModelServices\ChiTietHoaDonService.cs" />

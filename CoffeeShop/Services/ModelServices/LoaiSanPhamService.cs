@@ -8,36 +8,57 @@ using CoffeeShop.Models;
 
 namespace CoffeeShop.Services.ModelServices
 {
-    public class LoaiSanPhamService
+    public class LoaiSanPhamService : NotifyPropertyChanged
     {
-        static public LoaiSanPham GetById(int id)
+        private int _ma;
+        public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
+        private string _ten;
+        public string Ten { get => _ten; set { _ten = value; OnPropertyChanged(); } }
+
+        public LoaiSanPhamService() { }
+
+        public LoaiSanPhamService(LoaiSanPham lsp)
         {
-            return DataProvider.Ins.DB.LoaiSanPham.FirstOrDefault(x => x.Ma == id);
+            this.Ma = lsp.Ma;
+            this.Ten = lsp.Ten;
         }
 
-        static public LoaiSanPham GetByName(string name)
+        static public LoaiSanPhamService GetById(int id)
         {
-            return DataProvider.Ins.DB.LoaiSanPham.FirstOrDefault(x => x.Ten == name);
-        }
-        static public List<LoaiSanPham> GetAll()
-        {
-            return DataProvider.Ins.DB.LoaiSanPham.ToList();
+            LoaiSanPham lsp = DataProvider.Ins.DB.LoaiSanPham.FirstOrDefault(x => x.Ma == id);
+            return lsp == null ? null : new LoaiSanPhamService(lsp);
         }
 
-        static public LoaiSanPham Create(string name)
+        static public LoaiSanPhamService GetByName(string name)
+        {
+            LoaiSanPham lsp = DataProvider.Ins.DB.LoaiSanPham.FirstOrDefault(x => x.Ten == name);
+            return lsp == null ? null : new LoaiSanPhamService(lsp);
+        }
+        static public List<LoaiSanPhamService> GetAll()
+        {
+            List<LoaiSanPhamService> res = new List<LoaiSanPhamService>();
+            foreach (LoaiSanPham item in DataProvider.Ins.DB.LoaiSanPham.ToList())
+            {
+                res.Add(new LoaiSanPhamService(item));
+            }
+            return res;
+        }
+
+        public LoaiSanPhamService Create()
         {
             LoaiSanPham newlsp = new LoaiSanPham
             {
                 Ma = DataProvider.Ins.DB.LoaiSanPham.Count() == 0 ? 1 : DataProvider.Ins.DB.LoaiSanPham.Max(x => x.Ma) + 1,
-                Ten = name
+                Ten = this.Ten,
             };
             DataProvider.Ins.DB.LoaiSanPham.Add(newlsp);
             DataProvider.Ins.DB.SaveChanges();
-            return newlsp;
+            return new LoaiSanPhamService(newlsp);
         }
 
-        static public void Delete(LoaiSanPham lsp)
+        public void Delete()
         {
+            LoaiSanPham lsp = DataProvider.Ins.DB.LoaiSanPham.FirstOrDefault(x => x.Ma == this.Ma);
             DataProvider.Ins.DB.LoaiSanPham.Remove(lsp);
             DataProvider.Ins.DB.SaveChanges();
         }

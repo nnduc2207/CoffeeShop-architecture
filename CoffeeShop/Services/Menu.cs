@@ -10,74 +10,48 @@ using System.Threading.Tasks;
 
 namespace CoffeeShop.Services
 {
-    public class Menu : INotifyPropertyChanged
+    public class Menu : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
+        static private AsyncObservableCollection<LoaiSanPhamService> _categoryList;
+        static private Dictionary<int, AsyncObservableCollection<SanPhamService>> _productListByType;
 
-        static private AsyncObservableCollection<dynamic> _categoryList;
-        static private Dictionary<int, AsyncObservableCollection<dynamic>> _productListByType;
-
-        private Dictionary<int, dynamic> _hideProductList;
+        private Dictionary<int, SanPhamService> _hideProductList;
 
         private int _currentCategory;
-        private AsyncObservableCollection<dynamic> _currentMenu;
+        private AsyncObservableCollection<SanPhamService> _currentMenu;
 
-        public AsyncObservableCollection<dynamic> CurrentMenu
+        public AsyncObservableCollection<SanPhamService> CurrentMenu
         {
             get => _currentMenu;
             set {
                 _currentMenu = value;
-                NotifyPropertyChanged("CurrentMenu");
+                OnPropertyChanged();
             }
         }
-        public AsyncObservableCollection<dynamic> CategoryList { get => _categoryList; }
+        public AsyncObservableCollection<LoaiSanPhamService> CategoryList { get => _categoryList; }
         static Menu()
         {
-            _categoryList = new AsyncObservableCollection<dynamic>();
-            _productListByType = new Dictionary<int, AsyncObservableCollection<dynamic>>();
-            _categoryList.Add(new
+            _categoryList = new AsyncObservableCollection<LoaiSanPhamService>();
+            _productListByType = new Dictionary<int, AsyncObservableCollection<SanPhamService>>();
+            LoaiSanPhamService tatca = new LoaiSanPhamService();
+            tatca.Ma = 0;
+            tatca.Ten = "Tất cả";
+            _categoryList.Add(tatca);
+            _productListByType.Add(0, new AsyncObservableCollection<SanPhamService>());
+            foreach (LoaiSanPhamService item in LoaiSanPhamService.GetAll())
             {
-                Ma = 0,
-                Ten = "Tất cả",
-            });
-            _productListByType.Add(0, new AsyncObservableCollection<dynamic>());
-            foreach (LoaiSanPham item in LoaiSanPhamService.GetAll())
-            {
-                _categoryList.Add(new
-                {
-                    Ma = item.Ma,
-                    Ten = item.Ten,
-                });
-                _productListByType.Add(item.Ma, new AsyncObservableCollection<dynamic>());
+                _categoryList.Add(item);
+                _productListByType.Add(item.Ma, new AsyncObservableCollection<SanPhamService>());
             }
-            foreach (SanPham item in SanPhamService.GetAll())
+            foreach (SanPhamService item in SanPhamService.GetAll())
             {
-                _productListByType[0].Add(new
-                {
-                    Ma = item.Ma,
-                    Ten = item.Ten,
-                    Gia = item.Gia,
-                    Anh = item.Anh,
-                });
-                _productListByType[item.MaLoai].Add(new
-                {
-                    Ma = item.Ma,
-                    Ten = item.Ten,
-                    Gia = item.Gia,
-                    Anh = item.Anh,
-                });
+                _productListByType[0].Add(item);
+                _productListByType[item.MaLoai].Add(item);
             }
         }
         public Menu()
         {
-            _hideProductList = new Dictionary<int, dynamic>();
+            _hideProductList = new Dictionary<int, SanPhamService>();
         }
         public void ChangeProductListByType(int typeId)
         {
@@ -96,8 +70,8 @@ namespace CoffeeShop.Services
         }
         protected void LoadProductList()
         {
-            CurrentMenu = new AsyncObservableCollection<dynamic>();
-            foreach (dynamic item in _productListByType[_currentCategory])
+            CurrentMenu = new AsyncObservableCollection<SanPhamService>();
+            foreach (SanPhamService item in _productListByType[_currentCategory])
             {
                 if (!_hideProductList.ContainsKey(item.Ma))
                 {

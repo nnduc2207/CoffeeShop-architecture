@@ -82,7 +82,7 @@
                                   VerticalAlignment="Center"
                                   FontSize="20">
                                     <TextBox.Text>
-                                        <Binding Path="NewRawMaterialName">
+                                        <Binding Path="SelectedRawMaterial.Ten">
                                         </Binding>
                                     </TextBox.Text>
                                 </TextBox>
@@ -93,7 +93,7 @@
                                   VerticalAlignment="Center"
                                   FontSize="20">
                                     <TextBox.Text>
-                                        <Binding Path="NewRawMaterialAmount">
+                                        <Binding Path="SelectedRawMaterial.SoLuong">
                                         </Binding>
                                     </TextBox.Text>
                                 </TextBox>
@@ -103,7 +103,7 @@
                                   VerticalAlignment="Center"
                                   FontSize="20">
                                     <TextBox.Text>
-                                        <Binding Path="NewRawMaterialUnit">
+                                        <Binding Path="SelectedRawMaterial.DonVi">
                                         </Binding>
                                     </TextBox.Text>
                                 </TextBox>
@@ -177,7 +177,7 @@
                                   VerticalAlignment="Center"
                                   FontSize="20">
                                         <TextBlock.Text>
-                                            <Binding Path="PresentRawMaterialAmount">
+                                            <Binding Path="SelectedRawMaterial.SoLuong">
                                             </Binding>
                                         </TextBlock.Text>
                                     </TextBlock>
