@@ -1,4 +1,6 @@
 ﻿using CoffeeShop.Model;
+using CoffeeShop.Services;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +69,10 @@ namespace CoffeeShop.ViewModels
         public ICommand ClickChangePasswordButtonCommand { get; set; }
         public ICommand CloseChangePasswordDialog { get; set; }
         public ICommand ClickUpdateButtonCommand { get; set; }
+        public ICommand ClickCurrentEventButtonCommand { get; set; }
+        public ICommand ClickAddEventButtonCommand { get; set; }
+        public ICommand ClickSaveEventButtonCommand { get; set; }
+        public ICommand ClickDeleteEventButtonCommand { get; set; }
 
         #endregion
         public static SettingViewModel GetInstance()
@@ -186,6 +192,59 @@ namespace CoffeeShop.ViewModels
                 }
             });
 
+            ClickCurrentEventButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
+                string[] eventArray = EventManager.AllCurrentEventList().ToArray();
+                if (eventArray.Length == 0)
+                {
+                    Alert("No event currently");
+                }
+                else
+                {
+                    Alert("List events:\n" + String.Join("\n", eventArray));
+                }
+            });
+
+            ClickAddEventButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
+                OpenFileDialog dialog = new OpenFileDialog();
+                if (dialog.ShowDialog() == true)
+                {
+                    if (EventManager.LoadEventsFromFile(dialog.FileName))
+                    {
+                        Alert("Upload event success");
+                    }
+                    else
+                    {
+                        Alert("Upload event failed");
+                    }
+                }
+            });
+
+            ClickSaveEventButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
+                if (EventManager.SaveToDefault())
+                {
+                    Alert("Save all current events to default success");
+                }
+                else
+                {
+                    Alert("Save all current events to default failed");
+                }
+            });
+
+            ClickDeleteEventButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
+                if (EventManager.RemoveAllEvents())
+                {
+                    Alert("Remove events success");
+                }
+                else
+                {
+                    Alert("Remove events failed");
+                }
+            });
+        }
+
+        private void Alert(string message) {
+            Message = message;
+            IsOpenMessageDialog = true;
         }
     }
 }

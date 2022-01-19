@@ -293,7 +293,8 @@
                     <TextBlock FontSize="40" FontWeight="DemiBold" Margin="10" Foreground="SandyBrown">
                     Menu
                     </TextBlock>
-
+                    <Button Margin="600 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
+                    Command="{Binding ClickCurrentEventButtonCommand}" CommandParameter="{Binding}" Content="EVENT" FontSize="15" Foreground="#3e2723"></Button>
                 </StackPanel>
                 <!--Loại sản phẩm-->
                 <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Menu.CategoryList}" SelectedItem="{Binding Menu.SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">

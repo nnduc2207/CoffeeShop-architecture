@@ -120,6 +120,10 @@
     </ApplicationDefinition>
     <Compile Include="Global.cs" />
     <Compile Include="Services\Cart.cs" />
+    <Compile Include="Services\EventManager.cs" />
+    <Compile Include="Services\Events\BuyNGetMEvent.cs" />
+    <Compile Include="Services\Events\DiscountEvent.cs" />
+    <Compile Include="Services\Event.cs" />
     <Compile Include="Services\NotifyPropertyChanged.cs" />
     <Compile Include="Services\LoaiKhachHangFactory.cs" />
     <Compile Include="Services\Menu.cs" />

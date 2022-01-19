@@ -138,9 +138,36 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <TextBox Margin="5" Grid.Column="0" Grid.Row="0"
+                                      Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
+                                      VerticalAlignment="Center" HorizontalAlignment="Center"
+                                      FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
+                    <TextBox.Text>
+                        Sự kiện khuyến mãi
+                    </TextBox.Text>
+                </TextBox>
+
+                <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Margin="20 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
+                    Command="{Binding ClickCurrentEventButtonCommand}" Content="Show" FontSize="15" Foreground="#3e2723"></Button>
+                    <Button Grid.Column="1" Margin="20 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
+                    Command="{Binding ClickAddEventButtonCommand}" Content="Add from file" FontSize="15" Foreground="#3e2723"></Button>
+                    <Button Grid.Column="2" Margin="20 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
+                    Command="{Binding ClickSaveEventButtonCommand}" Content="Save default" FontSize="15" Foreground="#3e2723"></Button>
+                    <Button Grid.Column="3" Margin="20 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
+                    Command="{Binding ClickDeleteEventButtonCommand}" Content="Remove all" FontSize="15" Foreground="#3e2723"></Button>
+                </Grid>
+                
+                <TextBox Margin="5" Grid.Column="0" Grid.Row="1"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
@@ -149,7 +176,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5" Grid.Column="1" Grid.Row="0"
+                <TextBox Margin="5" Grid.Column="1" Grid.Row="1"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" TextWrapping="Wrap" Foreground="SandyBrown">
@@ -158,7 +185,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5" Grid.Column="2" Grid.Row="0"
+                <TextBox Margin="5" Grid.Column="2" Grid.Row="1"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
@@ -167,7 +194,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5" Grid.Column="0" Grid.Row="1"
+                <TextBox Margin="5" Grid.Column="0" Grid.Row="2"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
@@ -176,7 +203,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5" Grid.Column="0" Grid.Row="2"
+                <TextBox Margin="5" Grid.Column="0" Grid.Row="3"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
@@ -185,7 +212,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5" Grid.Column="0" Grid.Row="3"
+                <TextBox Margin="5" Grid.Column="0" Grid.Row="4"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
@@ -194,7 +221,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5" Grid.Column="0" Grid.Row="4"
+                <TextBox Margin="5" Grid.Column="0" Grid.Row="5"
                                       Style="{StaticResource MaterialDesignDataGridComboBoxEditableTextBox}"
                                       VerticalAlignment="Center" HorizontalAlignment="Center"
                                       FontSize="30" IsReadOnly="True" FontWeight="Bold" Foreground="SandyBrown">
@@ -203,7 +230,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="2" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">
@@ -213,7 +240,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="2"  Grid.Row="1" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="2"  Grid.Row="2" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">
@@ -223,7 +250,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="2" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="3" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">
@@ -233,7 +260,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="2"  Grid.Row="2" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="2"  Grid.Row="3" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">
@@ -243,7 +270,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="3" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="4" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">
@@ -253,7 +280,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="2"  Grid.Row="3" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="2"  Grid.Row="4" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">
@@ -263,7 +290,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="4" HorizontalAlignment="Center"
+                <TextBox Margin="5"  Grid.Column="1"  Grid.Row="5" HorizontalAlignment="Center"
                                       Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
                                       VerticalAlignment="Center"
                                       FontSize="30" IsReadOnly="False" Foreground="SandyBrown">

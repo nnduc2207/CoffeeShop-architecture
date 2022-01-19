@@ -97,6 +97,7 @@ namespace CoffeeShop.ViewModels
         public ICommand ClickIncreaseCartProductButtonCommand { get; set; }
         public ICommand ClickCheckoutButtonCommand { get; set; }
         public ICommand CloseShowCheckoutCommand { get; set; }
+        public ICommand ClickCurrentEventButtonCommand { get; set; }
 
         #endregion
 
@@ -224,6 +225,18 @@ namespace CoffeeShop.ViewModels
                 IsOpenShowCheckoutDialog = false;
             });
 
+            ClickCurrentEventButtonCommand = new RelayCommand<object>((param) => { return true; }, (param) =>
+            {
+                string[] eventArray = EventManager.AllCurrentEventList().ToArray();
+                if (eventArray.Length == 0)
+                {
+                    Alert("No event currently");
+                }
+                else
+                {
+                    Alert("List events:\n" + String.Join("\n", eventArray));
+                }
+            });
         }
 
         private void Alert(string message)
