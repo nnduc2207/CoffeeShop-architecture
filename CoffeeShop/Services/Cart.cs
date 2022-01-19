@@ -104,6 +104,7 @@ namespace CoffeeShop.Services
                 LoadProductList();
             }
             Total += SanPhamService.GetById(maSP).Gia;
+            ExecuteEvent();
             return true;
         }
 
@@ -127,6 +128,7 @@ namespace CoffeeShop.Services
             LoadProductList();
             CalculateReturnMaterial(maSP);
             Total -= SanPhamService.GetById(maSP).Gia;
+            ExecuteEvent();
             return true;
         }
 
@@ -234,6 +236,11 @@ namespace CoffeeShop.Services
                 nl.SoLuong -= _spendMaterialDic[manl];
                 nl.Update();
             }
+        }
+
+        private void ExecuteEvent()
+        {
+            EventManager.ExecuteEvent(this);
         }
     }
 }
