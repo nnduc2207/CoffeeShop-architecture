@@ -187,6 +187,7 @@
     <Compile Include="Services\ModelServices\SanPhamService.cs" />
     <Compile Include="Services\ModelServices\ThongSoService.cs" />
     <Compile Include="Services\ProductSort.cs" />
+    <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SortStrategies\NameSort.cs" />
     <Compile Include="Services\SortStrategies\PriceSort.cs" />
     <Compile Include="ViewModels\BasicViewModel.cs" />
