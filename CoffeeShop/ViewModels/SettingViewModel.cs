@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.Model;
 using CoffeeShop.Services;
+using CoffeeShop.Services.ModelServices;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -94,16 +95,16 @@ namespace CoffeeShop.ViewModels
         public SettingViewModel()
         {
             // khởi tạo dữ liệu
-            TLDDKHT = float.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThuong").GiaTri)*10000;
-            TLDDKHTX = float.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThuongXuyen").GiaTri) * 10000;
-            TLDDKHTT = float.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThanThiet").GiaTri) * 10000;
-            HMCTKHT = int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThuong").GiaTri);
-            HMCTKHTX = int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThuongXuyen").GiaTri);
-            HMCTKHTT = int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThanThiet").GiaTri);
-            YearsReset = int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "KyHanResetChiTieu").GiaTri);
+            TLDDKHT = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuong").GiaTri)*10000;
+            TLDDKHTX = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuongXuyen").GiaTri) * 10000; 
+             TLDDKHTT = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThanThiet").GiaTri) * 10000; 
+             HMCTKHT = int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThuong").GiaTri); 
+             HMCTKHTX = int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThuongXuyen").GiaTri); 
+             HMCTKHTT = int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThanThiet").GiaTri); 
+             YearsReset = int.Parse(ThongSoService.GetByName("KyHanResetChiTieu").GiaTri); 
 
-            // command
-            CloseMessageDialog = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
+             // command
+             CloseMessageDialog = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
                 IsOpenMessageDialog = false;
             });
 
@@ -114,7 +115,8 @@ namespace CoffeeShop.ViewModels
             CloseChangePasswordDialog = new RelayCommand<object>((param) => { return true; }, (param) => {
                 if (bool.Parse(param.ToString()) == true)
                 {
-                    if (PasswordOld != DataProvider.Ins.DB.ThongSo.First(x=>x.Ten=="MaBaoMat").GiaTri)
+                    ThongSoService mabaomat = ThongSoService.GetByName("MaBaoMat");
+                    if (PasswordOld != mabaomat.GiaTri)
                     {
                         Message = "Mật khẩu cũ không chính xác";
                         IsOpenMessageDialog = true;
@@ -128,8 +130,8 @@ namespace CoffeeShop.ViewModels
                         }
                         else
                         {
-                            DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "MaBaoMat").GiaTri = PasswordNew;
-                            DataProvider.Ins.DB.SaveChanges();
+                            mabaomat.GiaTri = PasswordNew;
+                            mabaomat.Update();
                             IsOpenChangePasswordDialog = false;
                         }
                     }
@@ -179,14 +181,13 @@ namespace CoffeeShop.ViewModels
                 }
                 else
                 {
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThuong").GiaTri = (TLDDKHT / 10000).ToString();
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThuongXuyen").GiaTri = (TLDDKHTX / 10000).ToString();
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "TiLeDoiDiemKHThanThiet").GiaTri = (TLDDKHTT / 10000).ToString();
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThuong").GiaTri = HMCTKHT.ToString();
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThuongXuyen").GiaTri = HMCTKHTX.ToString();
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "HanMucChiTieuKHThanThiet").GiaTri = HMCTKHTT.ToString();
-                    DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "KyHanResetChiTieu").GiaTri = YearsReset.ToString();
-                    DataProvider.Ins.DB.SaveChanges();
+                    SaveConfig("TiLeDoiDiemKHThuong", (TLDDKHT / 10000).ToString());
+                    SaveConfig("TiLeDoiDiemKHThuongXuyen", (TLDDKHTX / 10000).ToString());
+                    SaveConfig("TiLeDoiDiemKHThanThiet", (TLDDKHTT / 10000).ToString());
+                    SaveConfig("HanMucChiTieuKHThuong", HMCTKHT.ToString());
+                    SaveConfig("HanMucChiTieuKHThuongXuyen", HMCTKHTX.ToString());
+                    SaveConfig("HanMucChiTieuKHThanThiet", HMCTKHTT.ToString());
+                    SaveConfig("KyHanResetChiTieu", YearsReset.ToString());
                     Message = "Cập nhật thành công";
                     IsOpenMessageDialog = true;
                 }
@@ -240,6 +241,16 @@ namespace CoffeeShop.ViewModels
                     Alert("Remove events failed");
                 }
             });
+        }
+
+        private void SaveConfig(string settingName, string value)
+        {
+            ThongSoService updatedSetting = ThongSoService.GetByName(settingName);
+            if (updatedSetting != null)
+            {
+                updatedSetting.GiaTri = value;
+                updatedSetting.Update();
+            }
         }
 
         private void Alert(string message) {
