@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using CoffeeShop.Services;
 using CoffeeShop.Services.ModelServices;
 
 namespace CoffeeShop.ViewModels
@@ -113,7 +114,7 @@ namespace CoffeeShop.ViewModels
                 {
                     Products.Add(item);
                 }
-                Products = SearchByName(Search, Products);
+                Products = SearchService.SearchByName(Search, Products, "Ten");
                 OnPropertyChanged(); 
             } 
         }

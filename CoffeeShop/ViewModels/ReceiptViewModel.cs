@@ -25,8 +25,6 @@ namespace CoffeeShop.ViewModels
         // Receipt detail
         private bool _isOpenShowReceiptDialog;
 
-        private AsyncObservableCollection<dynamic> _showReceiptProducts;
-
         private string _showCustomerName;
         private string _showCustomerPhone;
         private DateTime _showReceiptDate;

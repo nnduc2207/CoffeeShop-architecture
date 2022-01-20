@@ -37,11 +37,6 @@ namespace CoffeeShop.ViewModels
 
         // check out
         private bool _isOpenShowCheckoutDialog;
-        private string _showCheckoutCustomerName;
-        private int _showCheckoutCustomerPoint;
-        private int _showCheckoutPoint;
-        private int _showCheckoutSpendPoint;
-        private int _showCheckoutRealPay;
         #endregion
 
         #region properties
