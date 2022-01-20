@@ -303,7 +303,7 @@
                     <TextBlock Grid.Column="2" FontSize="20" FontWeight="DemiBold" Margin="10" Foreground="SandyBrown" VerticalAlignment="Center">
                     sort:
                     </TextBlock>
-                    <ComboBox Grid.Column="3" ItemsSource="{Binding Menu.Sorts.Keys}" SelectedItem="{Binding SelectedSort}"></ComboBox>
+                    <ComboBox Grid.Column="3" ItemsSource="{Binding Menu.Sorts.Keys}" SelectedItem="{Binding SelectedSort}" Foreground="SandyBrown" FontSize="15"></ComboBox>
                     <Button Grid.Column="4" Margin="0 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
                     Command="{Binding ClickCurrentEventButtonCommand}" CommandParameter="{Binding}" Content="EVENT" FontSize="15" Foreground="#3e2723"></Button>
                 </Grid>
