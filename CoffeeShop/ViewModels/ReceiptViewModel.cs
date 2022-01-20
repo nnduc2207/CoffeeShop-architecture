@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CoffeeShop.Services.ModelServices;
 
 namespace CoffeeShop.ViewModels
 {
@@ -23,10 +24,10 @@ namespace CoffeeShop.ViewModels
 
         // Receipt detail
         private bool _isOpenShowReceiptDialog;
+
         private string _showCustomerName;
         private string _showCustomerPhone;
         private DateTime _showReceiptDate;
-        private AsyncObservableCollection<dynamic> _showReceiptProducts;
         private int _showReceiptTotal;
         private int _showReceiptPoint;
         private int _showReceiptRealPay;
@@ -44,14 +45,17 @@ namespace CoffeeShop.ViewModels
                 {
                     IsOpenShowReceiptDialog = true;
                     int maHD = SelectedReceipt.Ma;
-                    HoaDon hoadon = DataProvider.Ins.DB.HoaDon.First(x => x.Ma == maHD);
-                    ShowCustomerName = (hoadon.KhachHang == null) ? "<empty>" : hoadon.KhachHang.Ten;
+                    HoaDonService hoaDon = HoaDonService.GetById(maHD);
+                    KhachHangService khachHang = KhachHangService.GetById(hoaDon.MaKH);
+                    List<ChiTietHoaDonService> chiTietHoaDon = ChiTietHoaDonService.GetByHoaDon(maHD);
+
+                    ShowCustomerName = (hoaDon.MaKH == 0) ? "<empty>" : khachHang.Ten;
                     ShowCustomerPhone = SelectedReceipt.SDT;
                     ShowReceiptDate = SelectedReceipt.NgayTao;
-                    ShowReceiptPoint = (hoadon.DiemTichLuy == null) ? 0 : hoadon.DiemTichLuy.Value;
+                    ShowReceiptPoint = hoaDon.DiemTichLuy;
                     ShowReceiptTotal = 0;
                     ShowReceiptProducts = new AsyncObservableCollection<dynamic>();
-                    foreach (var item in hoadon.ChiTietHoaDon)
+                    foreach (var item in chiTietHoaDon)
                     {
                         ShowReceiptProducts.Add(new { 
                             Ten = item.TenSP,
@@ -71,18 +75,7 @@ namespace CoffeeShop.ViewModels
             get => _search; set
             {
                 _search = value;
-                Receipts = new AsyncObservableCollection<dynamic>();
-                foreach (var item in DataProvider.Ins.DB.HoaDon)
-                {
-                    Receipts.Add(new
-                    {
-                        Ma = item.Ma,
-                        NgayTao = item.NgayTao,
-                        SDT = (item.KhachHang == null) ? "<empty>" : item.KhachHang.SDT,
-                        Diem = (item.DiemTichLuy == null) ? 0 : item.DiemTichLuy,
-                        TongTien = item.TongTien,
-                    });
-                }
+                LoadAllReceipt();
                 foreach (dynamic item in Receipts.ToList())
                 {
                     string sdt = item.SDT;
@@ -94,9 +87,27 @@ namespace CoffeeShop.ViewModels
                 OnPropertyChanged();
             }
         }
+        private void LoadAllReceipt()
+        {
+            Receipts = new AsyncObservableCollection<dynamic>();
+            List<HoaDonService> allReceipts = HoaDonService.GetAll();
+            foreach (var item in allReceipts)
+            {
+                KhachHangService khachHang = KhachHangService.GetById(item.MaKH);
+                Receipts.Add(new
+                {
+                    Ma = item.Ma,
+                    NgayTao = item.NgayTao,
+                    SDT = (item.MaKH == 0) ? "<empty>" : khachHang.SDT,
+                    Diem = item.DiemTichLuy,
+                    TongTien = item.TongTien,
+                });
+            }
+        }
 
         // Receipt detail
         public bool IsOpenShowReceiptDialog { get => _isOpenShowReceiptDialog; set { _isOpenShowReceiptDialog = value; OnPropertyChanged(); } }
+
         public string ShowCustomerName { get => _showCustomerName; set { _showCustomerName = value; OnPropertyChanged(); } }
         public string ShowCustomerPhone { get => _showCustomerPhone; set { _showCustomerPhone = value; OnPropertyChanged(); } }
         public DateTime ShowReceiptDate { get => _showReceiptDate; set { _showReceiptDate = value; OnPropertyChanged(); } }
@@ -141,18 +152,7 @@ namespace CoffeeShop.ViewModels
             Loaded = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
 
                 // Setup dữ liệu
-                Receipts = new AsyncObservableCollection<dynamic>();
-                foreach (var item in DataProvider.Ins.DB.HoaDon)
-                {
-                    Receipts.Add(new
-                    {
-                        Ma = item.Ma,
-                        NgayTao = item.NgayTao,
-                        SDT = (item.KhachHang == null) ? "<empty>" : item.KhachHang.SDT,
-                        Diem = (item.DiemTichLuy == null) ? 0 : item.DiemTichLuy,
-                        TongTien = item.TongTien,
-                    });
-                }
+                LoadAllReceipt();
             });
 
 

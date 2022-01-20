@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CoffeeShop.Services;
 
 namespace CoffeeShop.ViewModels
 {
@@ -70,7 +71,7 @@ namespace CoffeeShop.ViewModels
                         DonVi = item.DonVi
                     });
                 }
-                tmp = SearchByName(Search, tmp);
+                tmp = SearchService.SearchByName(Search, tmp, "Ten");
                 RawMaterials = new AsyncObservableCollection<KhoNguyenLieuService>();
                 foreach (var item in tmp)
                 {

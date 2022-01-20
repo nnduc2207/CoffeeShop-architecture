@@ -14,11 +14,11 @@ namespace CoffeeShop.ViewModels
         #region private variables
         //private BaseViewModel _currentPageViewModel = null;
         //private Visibility _leftPanelVisibility = Visibility.Visible;
-        private String _addPlaceColor = Brushes.White.ToString();
-        private String _addMemberColor = Brushes.White.ToString();
-        private String _settingColor = Brushes.White.ToString();
-        private String _aboutColor = Brushes.White.ToString();
-        private String _versionTextBlock = Brushes.White.ToString();
+        private string _addPlaceColor = Brushes.White.ToString();
+        private string _addMemberColor = Brushes.White.ToString();
+        private string _settingColor = Brushes.White.ToString();
+        private string _aboutColor = Brushes.White.ToString();
+        private string _versionTextBlock = Brushes.White.ToString();
         private string _nextPageVM;
 
         // mesage
@@ -63,7 +63,7 @@ namespace CoffeeShop.ViewModels
 
         #region Panel
 
-        public String VersionTextBlock { get => _versionTextBlock; set { _versionTextBlock = value; OnPropertyChanged(); } }
+        public string VersionTextBlock { get => _versionTextBlock; set { _versionTextBlock = value; OnPropertyChanged(); } }
 
         public Global global = Global.GetInstance();
 
@@ -85,7 +85,7 @@ namespace CoffeeShop.ViewModels
 
         public MainViewModel()
         {
-            if (DateTime.Now.Year - int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "LanCuoiResetChiTieu").GiaTri) >= int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "KyHanResetChiTieu").GiaTri))
+            if (IsResetPeriodExpired())
             {
                 foreach (var item in DataProvider.Ins.DB.KhachHang)
                 {
@@ -191,6 +191,12 @@ namespace CoffeeShop.ViewModels
                     IsOpenEnterPasswordDialog = false;
                 }
             });
+        }
+        private bool IsResetPeriodExpired ()
+        {
+            int lastTime = int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "LanCuoiResetChiTieu").GiaTri);
+            int resetPeriod = int.Parse(DataProvider.Ins.DB.ThongSo.First(x => x.Ten == "KyHanResetChiTieu").GiaTri);
+            return DateTime.Now.Year - lastTime >= resetPeriod;
         }
 
         void ResetPanelColor()

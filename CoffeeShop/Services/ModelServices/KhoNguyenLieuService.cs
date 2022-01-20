@@ -34,9 +34,14 @@ namespace CoffeeShop.Services.ModelServices
             return new KhoNguyenLieuService(DataProvider.Ins.DB.KhoNguyenLieu.FirstOrDefault(x => x.MaNL == id));
         }
 
-        static public List<KhoNguyenLieu> GetAll()
+        static public List<KhoNguyenLieuService> GetAll()
         {
-            return DataProvider.Ins.DB.KhoNguyenLieu.ToList();
+            List<KhoNguyenLieuService> res = new List<KhoNguyenLieuService>();
+            foreach (KhoNguyenLieu item in DataProvider.Ins.DB.KhoNguyenLieu.ToList())
+            {
+                res.Add(new KhoNguyenLieuService(item));
+            }
+            return res;
         }
 
         public KhoNguyenLieuService Create()

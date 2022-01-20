@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using CoffeeShop.Model;
 using CoffeeShop.Models;
-using CoffeeShop.Model;
-using CoffeeShop.Models;
 using System.ComponentModel;
 
 namespace CoffeeShop.Services.ModelServices

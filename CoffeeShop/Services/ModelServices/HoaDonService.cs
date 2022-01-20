@@ -15,8 +15,8 @@ namespace CoffeeShop.Services.ModelServices
         public int Ma { get => _ma; set { _ma = value; OnPropertyChanged(); } }
         private int _maKH;
         public int MaKH { get => _maKH; set { _maKH = value; OnPropertyChanged(); } }
-        private string _ngayTao;
-        public string NgayTao { get => _ngayTao; set { _ngayTao = value; OnPropertyChanged(); } }
+        private DateTime _ngayTao;
+        public DateTime NgayTao { get => _ngayTao; set { _ngayTao = value; OnPropertyChanged(); } }
         private int _tongTien;
         public int TongTien { get => _tongTien; set { _tongTien = value; OnPropertyChanged(); } }
         private int _diemTichLuy;
@@ -28,7 +28,7 @@ namespace CoffeeShop.Services.ModelServices
         {
             Ma = hd.Ma;
             MaKH = hd.MaKH.GetValueOrDefault(0);
-            NgayTao = hd.NgayTao.ToString();
+            NgayTao = hd.NgayTao;
             TongTien = hd.TongTien;
             DiemTichLuy = hd.DiemTichLuy.HasValue ? hd.DiemTichLuy.Value : 0;
         }

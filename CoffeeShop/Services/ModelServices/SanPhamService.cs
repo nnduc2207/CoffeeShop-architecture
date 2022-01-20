@@ -50,13 +50,13 @@ namespace CoffeeShop.Services.ModelServices
             return res;
         }
         
-        public SanPhamService Create(string imageDir)
+        public SanPhamService Create()
         {
             SanPham newsp = new SanPham
             {
                 Ma = DataProvider.Ins.DB.SanPham.Count() == 0 ? 1 : DataProvider.Ins.DB.SanPham.Max(x => x.Ma) + 1,
                 Ten = this.Ten,
-                Anh = ImageToBytes(imageDir),
+                Anh = this.Anh,
                 Gia = this.Gia,
                 MaLoai = this.MaLoai,
             };
@@ -82,7 +82,7 @@ namespace CoffeeShop.Services.ModelServices
             DataProvider.Ins.DB.SaveChanges();
         }
 
-        private static byte[] ImageToBytes(string imageDir)
+        public static byte[] ImageToBytes(string imageDir)
         {
             BitmapImage image = new BitmapImage(
                     new Uri(imageDir,

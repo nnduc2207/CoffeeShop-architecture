@@ -212,9 +212,7 @@ namespace CoffeeShop.ViewModels
                     {
                         Alert(e.Message);
                     }
-                    MyCart = Cart.GetInstance(true);
-                    CustomerPhone = null;
-                    CustomerName = null;
+                    ResetMyCard();
                     Alert("thanh toán thành công");
                 }
                 IsOpenShowCheckoutDialog = false;
@@ -232,6 +230,12 @@ namespace CoffeeShop.ViewModels
                     Alert("List events:\n" + String.Join("\n", eventArray));
                 }
             });
+        }
+        private void ResetMyCard()
+        {
+            MyCart = Cart.GetInstance(true);
+            CustomerPhone = null;
+            CustomerName = null;
         }
 
         private void Alert(string message)
