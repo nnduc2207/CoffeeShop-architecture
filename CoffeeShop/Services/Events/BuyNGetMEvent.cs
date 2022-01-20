@@ -42,7 +42,7 @@ namespace CoffeeShop.Services.Events
 
         public override void SaveToFile(StreamWriter sw)
         {
-            sw.WriteLine("DiscountEvent");
+            sw.WriteLine("BuyNGetMEvent");
             sw.WriteLine(3);
             sw.WriteLine(this.productName);
             sw.WriteLine(this.n);

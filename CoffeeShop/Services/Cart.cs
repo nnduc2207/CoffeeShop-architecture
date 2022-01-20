@@ -18,7 +18,6 @@ namespace CoffeeShop.Services
         private Dictionary<int, int> _productCount = new Dictionary<int, int>();
         private Dictionary<int, int> _spendMaterialDic = new Dictionary<int, int>();
         private AsyncObservableCollection<dynamic> _productList = new AsyncObservableCollection<dynamic>();
-        private AsyncObservableCollection<dynamic> _giveawayList = new AsyncObservableCollection<dynamic>();
         private int _total = 0;
         private int _point = 0;
         private int _spendPoint = 0;
