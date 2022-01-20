@@ -14,7 +14,7 @@ namespace CoffeeShop.Services.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || value == "") return "";
+            if (value == null || value.ToString() == "") return "";
             var tmp = value as Nullable<DateTime>;
             string res;
             res = $"{tmp.Value.Day}/{tmp.Value.Month}/{tmp.Value.Year}";
