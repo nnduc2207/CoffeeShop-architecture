@@ -18,9 +18,10 @@ namespace CoffeeShop.ViewModels
         private static object m_lock = new object();
 
         private Menu _menu;
-        private dynamic _selectedCategory;
-        private dynamic _selectedProduct;
-        private AsyncObservableCollection<dynamic> _spendMaterial;
+        private LoaiSanPhamService _selectedCategory;
+        private LoaiSanPhamService _selectedProduct;
+        private string _selectedSort;
+
         // Customer
         private bool _isCustomer;
         private string _customerName;
@@ -41,7 +42,7 @@ namespace CoffeeShop.ViewModels
 
         #region properties
         public Menu Menu { get => _menu; set { _menu = value; OnPropertyChanged(); } }
-        public dynamic SelectedCategory
+        public LoaiSanPhamService SelectedCategory
         {
             get => _selectedCategory; set
             {
@@ -53,7 +54,8 @@ namespace CoffeeShop.ViewModels
                 OnPropertyChanged();
             }
         }
-        public dynamic SelectedProduct { get => _selectedProduct; set { _selectedProduct = value; OnPropertyChanged(); } }
+        public LoaiSanPhamService SelectedProduct { get => _selectedProduct; set { _selectedProduct = value; OnPropertyChanged(); } }
+        public string SelectedSort { get => _selectedSort; set { _selectedSort = value; Menu.CurrentSort = Menu.Sorts[value]; OnPropertyChanged(); } }
  
         // Customer
         public bool IsCustomer { get => _isCustomer; set { _isCustomer = value; OnPropertyChanged(); } }
@@ -92,6 +94,7 @@ namespace CoffeeShop.ViewModels
         public ICommand ClickIncreaseCartProductButtonCommand { get; set; }
         public ICommand ClickCheckoutButtonCommand { get; set; }
         public ICommand CloseShowCheckoutCommand { get; set; }
+        public ICommand ClickCurrentEventButtonCommand { get; set; }
 
         #endregion
 
@@ -118,8 +121,6 @@ namespace CoffeeShop.ViewModels
                 Menu = new Menu();
                 SelectedCategory = Menu.CategoryList[0];
                 // khởi tạo dữ liệu
-                // Danh sách loại sản phẩm
-                _spendMaterial = new AsyncObservableCollection<dynamic>();
                 MyCart = Cart.GetInstance();
                 HasCustomer = false;
                 IsCustomer = true;
@@ -217,6 +218,18 @@ namespace CoffeeShop.ViewModels
                 IsOpenShowCheckoutDialog = false;
             });
 
+            ClickCurrentEventButtonCommand = new RelayCommand<object>((param) => { return true; }, (param) =>
+            {
+                string[] eventArray = EventManager.AllCurrentEventList().ToArray();
+                if (eventArray.Length == 0)
+                {
+                    Alert("No event currently");
+                }
+                else
+                {
+                    Alert("List events:\n" + String.Join("\n", eventArray));
+                }
+            });
         }
         private void ResetMyCard()
         {

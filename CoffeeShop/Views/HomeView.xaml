@@ -289,14 +289,26 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Vertical" Background="#3e2723">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="40" FontWeight="DemiBold" Margin="10" Foreground="SandyBrown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" FontSize="40" FontWeight="DemiBold" Margin="10" Foreground="SandyBrown">
                     Menu
                     </TextBlock>
-
-                </StackPanel>
+                    <TextBlock Grid.Column="2" FontSize="20" FontWeight="DemiBold" Margin="10" Foreground="SandyBrown" VerticalAlignment="Center">
+                    sort:
+                    </TextBlock>
+                    <ComboBox Grid.Column="3" ItemsSource="{Binding Menu.Sorts.Keys}" SelectedItem="{Binding SelectedSort}" Foreground="SandyBrown" FontSize="15"></ComboBox>
+                    <Button Grid.Column="4" Margin="0 20 0 20" BorderBrush="SandyBrown" Background="SandyBrown" BorderThickness="1" Padding="0" HorizontalAlignment="Center" Width="100" Height="40"
+                    Command="{Binding ClickCurrentEventButtonCommand}" CommandParameter="{Binding}" Content="EVENT" FontSize="15" Foreground="#3e2723"></Button>
+                </Grid>
                 <!--Loại sản phẩm-->
-                <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Menu.CategoryList}" SelectedItem="{Binding Menu.SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
+                <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Menu.CategoryList}" SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="100" Height="50" Padding="0"

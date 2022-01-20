@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.Models;
 using CoffeeShop.Services.ModelServices;
+using CoffeeShop.Services.SortStrategies;
 using CoffeeShop.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,24 +14,39 @@ namespace CoffeeShop.Services
     public class Menu : NotifyPropertyChanged
     {
         static private AsyncObservableCollection<LoaiSanPhamService> _categoryList;
+        static private Dictionary<string, ProductSort> _sorts;
         static private Dictionary<int, AsyncObservableCollection<SanPhamService>> _productListByType;
 
         private Dictionary<int, SanPhamService> _hideProductList;
 
         private int _currentCategory;
+        private ProductSort _currentSort;
         private AsyncObservableCollection<SanPhamService> _currentMenu;
 
-        public AsyncObservableCollection<SanPhamService> CurrentMenu
+        public AsyncObservableCollection<SanPhamService> CurrentMenu { get => _currentMenu; set { _currentMenu = value; OnPropertyChanged(); } }
+        public AsyncObservableCollection<LoaiSanPhamService> CategoryList { get => _categoryList; }
+        public Dictionary<string, ProductSort> Sorts { get => _sorts; }
+        public ProductSort CurrentSort
         {
-            get => _currentMenu;
-            set {
-                _currentMenu = value;
+            get => _currentSort;
+            set
+            {
+                _currentSort = value;
+                SortMenu();
                 OnPropertyChanged();
             }
         }
-        public AsyncObservableCollection<LoaiSanPhamService> CategoryList { get => _categoryList; }
+
         static Menu()
         {
+            // GEt sort list
+            _sorts = new Dictionary<string, ProductSort>();
+            foreach (ProductSort item in ProductSort.GetAll())
+            {
+                _sorts.Add(item.GetName(), item);
+            }
+
+            // Get category list and their product list
             _categoryList = new AsyncObservableCollection<LoaiSanPhamService>();
             _productListByType = new Dictionary<int, AsyncObservableCollection<SanPhamService>>();
             LoaiSanPhamService tatca = new LoaiSanPhamService();
@@ -56,6 +72,7 @@ namespace CoffeeShop.Services
         public void ChangeProductListByType(int typeId)
         {
             _currentCategory = typeId;
+            SortMenu();
             LoadProductList();
         }
         public void HideProduct(dynamic product)
@@ -79,5 +96,25 @@ namespace CoffeeShop.Services
                 }
             }
         }
+
+        protected void SortMenu()
+        {
+            if (CurrentSort != null)
+            {
+                List<SanPhamService> tmp = new List<SanPhamService>();
+                foreach (SanPhamService item in _productListByType[_currentCategory])
+                {
+                    tmp.Add(item);
+                }
+                CurrentSort.Sort(ref tmp);
+                _productListByType[_currentCategory] = new AsyncObservableCollection<SanPhamService>();
+                foreach (SanPhamService item in tmp)
+                {
+                    _productListByType[_currentCategory].Add(item);
+                }
+                LoadProductList();
+            }
+        }
+
     }
 }
