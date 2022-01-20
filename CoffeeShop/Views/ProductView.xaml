@@ -86,14 +86,14 @@
                                       VerticalAlignment="Center"
                                       FontSize="20" Foreground="#4e3427">
                                             <TextBox.Text>
-                                                <Binding Path="NewProductName">
+                                                <Binding Path="ProductDetail.Ten">
                                                 </Binding>
                                             </TextBox.Text>
                                         </TextBox>
 
                                         <ComboBox Margin="5 10"
                                       materialDesign:HintAssist.Hint="LOẠI SẢN PHẨM"
-                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedNewProductCategory, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding NewProductCategories}"
+                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedProductCategory, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Categories}"
                                       IsEditable="True" DisplayMemberPath="Ten" FontSize="20" Foreground="#4e3427">
                                         </ComboBox>
 
@@ -103,7 +103,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="20" Foreground="#4e3427">
                                             <TextBox.Text>
-                                                <Binding Path="NewProductPrice">
+                                                <Binding Path="ProductDetail.Gia">
                                                 </Binding>
                                             </TextBox.Text>
                                         </TextBox>
@@ -111,9 +111,9 @@
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">
 
-                                        <Button Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm ảnh" Foreground="SandyBrown" Width="100"  Command="{Binding AddThumbnailCommand}"></Button>
+                                        <Button Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm ảnh" Foreground="SandyBrown" Width="100"  Command="{Binding ThumbnailCommand}"></Button>
                                         <Border CornerRadius="10" BorderThickness="1" BorderBrush="SaddleBrown" Height="160" Width="160">
-                                            <Image Source="{Binding NewProductThumbnail, Converter={StaticResource ImageConverter}}" Width="150" Height="150" Margin="5"/>
+                                            <Image Source="{Binding ProductDetail.Anh, Converter={StaticResource ImageConverter}}" Width="150" Height="150" Margin="5"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -129,7 +129,7 @@
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Margin="5 10" Grid.Column="0"
                                       materialDesign:HintAssist.Hint="TÊN NGUYÊN LIỆU"
-                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedAddNewProductRawMaterial, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding AddNewProductRawMaterials}"
+                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedMaterial, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Materials}"
                                       IsEditable="True" DisplayMemberPath="Ten" FontSize="15" Foreground="#4e3427">
                                     </ComboBox>
 
@@ -139,7 +139,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" Foreground="#4e3427">
                                         <TextBox.Text>
-                                            <Binding Path="NewProductRawMaterialAmount">
+                                            <Binding Path="ProductMaterialAmount">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
@@ -150,18 +150,18 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True" Foreground="#4e3427">
                                         <TextBox.Text>
-                                            <Binding Path="SelectedAddNewProductRawMaterialUnit">
+                                            <Binding Path="SelectedMaterial.DonVi">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
 
-                                    <Button Grid.Column="3" Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm" Foreground="SandyBrown" Width="100"  Command="{Binding AddNewProductRawMaterialCommand}"></Button>
+                                    <Button Grid.Column="3" Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm" Foreground="SandyBrown" Width="100"  Command="{Binding AddProductRawMaterialCommand}"></Button>
 
                                 </Grid>
 
                                 <!--Nguyên liệu ListView-->
                                 <ListView x:Name="NewProductRawMaterialListView" Height="370"
-            ItemsSource="{Binding NewProductRawMaterials}" SelectedItem="{Binding SelectedNewProductRawMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+            ItemsSource="{Binding ProductMaterials}" SelectedItem="{Binding SelectedProductMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn Header="Tên nguyên liệu" Width="350">
@@ -189,7 +189,7 @@
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Button Height="auto" Margin="10 5" BorderBrush="Red" Background="Transparent" BorderThickness="1" Padding="0" HorizontalAlignment="Right"
-                                                Command="{Binding ElementName=ProductsListView, Path=DataContext.DeleteNewProductRawMaterialCommand}" CommandParameter="{Binding}" ToolTip="Delete">
+                                                Command="{Binding ElementName=ProductsListView, Path=DataContext.DeleteProductRawMaterialCommand}" CommandParameter="{Binding}" ToolTip="Delete">
                                                             <materialDesign:PackIcon Width="40" Height="40" Kind="CloseCircle" Background="Red" />
                                                         </Button>
                                                     </DataTemplate>
@@ -251,14 +251,14 @@
                                       VerticalAlignment="Center"
                                       FontSize="20">
                                             <TextBox.Text>
-                                                <Binding Path="EditProductName">
+                                                <Binding Path="ProductDetail.Ten">
                                                 </Binding>
                                             </TextBox.Text>
                                         </TextBox>
 
                                         <ComboBox Margin="5 10"
                                       materialDesign:HintAssist.Hint="LOẠI SẢN PHẨM"
-                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedEditProductCategory, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding EditProductCategories}"
+                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedProductCategory, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Categories}"
                                       IsEditable="True" DisplayMemberPath="Ten" FontSize="20">
                                         </ComboBox>
 
@@ -268,7 +268,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="20">
                                             <TextBox.Text>
-                                                <Binding Path="EditProductPrice">
+                                                <Binding Path="ProductDetail.Gia">
                                                 </Binding>
                                             </TextBox.Text>
                                         </TextBox>
@@ -276,9 +276,9 @@
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">
 
-                                        <Button Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm ảnh" Foreground="SandyBrown" Width="100"  Command="{Binding EditThumbnailCommand}"></Button>
+                                        <Button Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm ảnh" Foreground="SandyBrown" Width="100"  Command="{Binding ThumbnailCommand}"></Button>
                                         <Border CornerRadius="10" BorderThickness="1" BorderBrush="SaddleBrown" Height="160" Width="160">
-                                            <Image Source="{Binding EditProductThumbnail, Converter={StaticResource ImageConverter}}" Width="150" Height="150" Margin="5"/>
+                                            <Image Source="{Binding ProductDetail.Anh, Converter={StaticResource ImageConverter}}" Width="150" Height="150" Margin="5"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -294,7 +294,7 @@
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Margin="5 10" Grid.Column="0"
                                       materialDesign:HintAssist.Hint="TÊN NGUYÊN LIỆU"
-                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedAddEditProductRawMaterial, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding AddEditProductRawMaterials}"
+                                      materialDesign:HintAssist.HintOpacity=".26" SelectedItem="{Binding SelectedMaterial, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Materials}"
                                       IsEditable="True" DisplayMemberPath="Ten" FontSize="15">
                                     </ComboBox>
 
@@ -304,7 +304,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="15">
                                         <TextBox.Text>
-                                            <Binding Path="EditProductRawMaterialAmount">
+                                            <Binding Path="ProductMaterialAmount">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
@@ -315,18 +315,18 @@
                                       VerticalAlignment="Center"
                                       FontSize="15" IsReadOnly="True">
                                         <TextBox.Text>
-                                            <Binding Path="SelectedAddEditProductRawMaterialUnit">
+                                            <Binding Path="SelectedMaterial.DonVi">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
 
-                                    <Button Grid.Column="3" Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm" Foreground="SandyBrown" Width="100"  Command="{Binding AddEditProductRawMaterialCommand}"></Button>
+                                    <Button Grid.Column="3" Background="SaddleBrown" BorderBrush="{x:Null}" Margin="5 20" Content="Thêm" Foreground="SandyBrown" Width="100"  Command="{Binding AddProductRawMaterialCommand}"></Button>
 
                                 </Grid>
 
                                 <!--Nguyên liệu ListView-->
                                 <ListView x:Name="EditProductRawMaterialListView" Height="370"
-            ItemsSource="{Binding EditProductRawMaterials}" SelectedItem="{Binding SelectedEditProductRawMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+            ItemsSource="{Binding ProductMaterials}" SelectedItem="{Binding SelectedProductMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn
@@ -358,7 +358,7 @@
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Button Height="auto" Margin="10 5" BorderBrush="Red" Background="Transparent" BorderThickness="1" Padding="0" HorizontalAlignment="Right"
-                                                Command="{Binding ElementName=ProductsListView, Path=DataContext.DeleteEditProductRawMaterialCommand}" CommandParameter="{Binding}" ToolTip="Delete">
+                                                Command="{Binding ElementName=ProductsListView, Path=DataContext.DeleteProductRawMaterialCommand}" CommandParameter="{Binding}" ToolTip="Delete">
                                                             <materialDesign:PackIcon Width="40" Height="40" Kind="CloseCircle" Background="Red" />
                                                         </Button>
                                                     </DataTemplate>
@@ -463,7 +463,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="20" IsReadOnly="True">
                                         <TextBox.Text>
-                                            <Binding Path="ShowProductName">
+                                            <Binding Path="ProductDetail.Ten">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
@@ -474,7 +474,7 @@
                                       VerticalAlignment="Center"
                                       FontSize="20" IsReadOnly="True">
                                         <TextBox.Text>
-                                            <Binding Path="ShowProductCategory">
+                                            <Binding Path="SelectedProductCategory.Ten">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
@@ -485,14 +485,14 @@
                                       VerticalAlignment="Center"
                                       FontSize="20" IsReadOnly="True">
                                         <TextBox.Text>
-                                            <Binding Path="ShowProductPrice">
+                                            <Binding Path="ProductDetail.Gia">
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
 
                                 </StackPanel>
                                 <Border Grid.Column="1" CornerRadius="10" BorderThickness="1" BorderBrush="SaddleBrown" Height="200" Width="200" Margin="10">
-                                    <Image Source="{Binding ShowProductThumbnail, Converter={StaticResource ImageConverter}}" Width="190" Height="190" Margin="5"/>
+                                    <Image Source="{Binding ProductDetail.Anh, Converter={StaticResource ImageConverter}}" Width="190" Height="190" Margin="5"/>
                                 </Border>
                             </Grid>
                             <TextBlock>
@@ -500,7 +500,7 @@
                             </TextBlock>
                             <!--Nguyên liệu ListView-->
                             <ListView x:Name="ShowProductRawMaterialListView" Height="400"
-            ItemsSource="{Binding ShowProductRawMaterials}" SelectedItem="{Binding SelectedShowProductRawMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+            ItemsSource="{Binding ProductMaterials}" SelectedItem="{Binding SelectedProductMaterial}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn
@@ -573,7 +573,7 @@
             </DockPanel>
 
             <!--Loại sản phẩm-->
-            <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
+            <ListView Name="Categories" Margin="0 20 0 0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory.Ten, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="False">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Button Background="{x:Null}" BorderBrush="{x:Null}"  Width="100" Height="50" Padding="0"
