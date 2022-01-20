@@ -18,9 +18,10 @@ namespace CoffeeShop.ViewModels
         private static object m_lock = new object();
 
         private Menu _menu;
-        private dynamic _selectedCategory;
-        private dynamic _selectedProduct;
-        private AsyncObservableCollection<dynamic> _spendMaterial;
+        private LoaiSanPhamService _selectedCategory;
+        private LoaiSanPhamService _selectedProduct;
+        private string _selectedSort;
+
         // Customer
         private bool _isCustomer;
         private string _customerName;
@@ -37,16 +38,11 @@ namespace CoffeeShop.ViewModels
 
         // check out
         private bool _isOpenShowCheckoutDialog;
-        private string _showCheckoutCustomerName;
-        private int _showCheckoutCustomerPoint;
-        private int _showCheckoutPoint;
-        private int _showCheckoutSpendPoint;
-        private int _showCheckoutRealPay;
         #endregion
 
         #region properties
         public Menu Menu { get => _menu; set { _menu = value; OnPropertyChanged(); } }
-        public dynamic SelectedCategory
+        public LoaiSanPhamService SelectedCategory
         {
             get => _selectedCategory; set
             {
@@ -58,7 +54,8 @@ namespace CoffeeShop.ViewModels
                 OnPropertyChanged();
             }
         }
-        public dynamic SelectedProduct { get => _selectedProduct; set { _selectedProduct = value; OnPropertyChanged(); } }
+        public LoaiSanPhamService SelectedProduct { get => _selectedProduct; set { _selectedProduct = value; OnPropertyChanged(); } }
+        public string SelectedSort { get => _selectedSort; set { _selectedSort = value; Menu.CurrentSort = Menu.Sorts[value]; OnPropertyChanged(); } }
  
         // Customer
         public bool IsCustomer { get => _isCustomer; set { _isCustomer = value; OnPropertyChanged(); } }
@@ -124,8 +121,6 @@ namespace CoffeeShop.ViewModels
                 Menu = new Menu();
                 SelectedCategory = Menu.CategoryList[0];
                 // khởi tạo dữ liệu
-                // Danh sách loại sản phẩm
-                _spendMaterial = new AsyncObservableCollection<dynamic>();
                 MyCart = Cart.GetInstance();
                 HasCustomer = false;
                 IsCustomer = true;
