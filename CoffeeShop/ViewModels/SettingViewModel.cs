@@ -95,9 +95,9 @@ namespace CoffeeShop.ViewModels
         public SettingViewModel()
         {
             // khởi tạo dữ liệu
-            TLDDKHT = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuong").GiaTri)*10000;
-            TLDDKHTX = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuongXuyen").GiaTri) * 10000; 
-             TLDDKHTT = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThanThiet").GiaTri) * 10000; 
+            TLDDKHT = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuong").GiaTri);
+            TLDDKHTX = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuongXuyen").GiaTri); 
+             TLDDKHTT = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThanThiet").GiaTri); 
              HMCTKHT = int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThuong").GiaTri); 
              HMCTKHTX = int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThuongXuyen").GiaTri); 
              HMCTKHTT = int.Parse(ThongSoService.GetByName("HanMucChiTieuKHThanThiet").GiaTri); 
@@ -181,9 +181,9 @@ namespace CoffeeShop.ViewModels
                 }
                 else
                 {
-                    SaveConfig("TiLeDoiDiemKHThuong", (TLDDKHT / 10000).ToString());
-                    SaveConfig("TiLeDoiDiemKHThuongXuyen", (TLDDKHTX / 10000).ToString());
-                    SaveConfig("TiLeDoiDiemKHThanThiet", (TLDDKHTT / 10000).ToString());
+                    SaveConfig("TiLeDoiDiemKHThuong", (TLDDKHT).ToString());
+                    SaveConfig("TiLeDoiDiemKHThuongXuyen", (TLDDKHTX).ToString());
+                    SaveConfig("TiLeDoiDiemKHThanThiet", (TLDDKHTT).ToString());
                     SaveConfig("HanMucChiTieuKHThuong", HMCTKHT.ToString());
                     SaveConfig("HanMucChiTieuKHThuongXuyen", HMCTKHTX.ToString());
                     SaveConfig("HanMucChiTieuKHThanThiet", HMCTKHTT.ToString());

@@ -13,7 +13,7 @@ namespace CoffeeShop.Services.CustomerTypes
         public int TinhDiemThuong(int money)
         {
             float rate = float.Parse(ThongSoService.GetByName("TiLeDoiDiemKHThuong").GiaTri);
-            return (int)(rate * money);
+            return (int)(rate * money / 10000);
         }
     }
 }

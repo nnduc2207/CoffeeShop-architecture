@@ -34,8 +34,9 @@ namespace CoffeeShop.ViewModels
         private AsyncObservableCollection<dynamic> _productMaterials;
         private dynamic _selectedProductMaterial;
 
-        private SanPhamService _productDetail;
+
         private LoaiSanPhamService _selectedProductCategory;
+        private SanPhamService _productDetail;
         private int _productMaterialAmount;
 
         // search
@@ -93,6 +94,7 @@ namespace CoffeeShop.ViewModels
         public dynamic SelectedProductMaterial { get => _selectedProductMaterial; set { _selectedProductMaterial = value; OnPropertyChanged(); } }
 
         public SanPhamService ProductDetail { get => _productDetail; set { _productDetail = value; OnPropertyChanged(); } }
+
         public LoaiSanPhamService SelectedProductCategory
         {
             get => _selectedProductCategory; set
@@ -162,7 +164,8 @@ namespace CoffeeShop.ViewModels
         public bool IsOpenShowProductDialog { get => _isOpenShowProductDialog; set { _isOpenShowProductDialog = value;
                 int ma = SelectedProduct.Ma;
                 ProductDetail = SanPhamService.GetById(ma);
-                SelectedProductCategory = LoaiSanPhamService.GetById(ProductDetail.MaLoai);
+
+                SelectedProductCategory = Categories.First(x => x.Ma == ProductDetail.MaLoai);
 
                 List<NguyenLieuService> NguyenLieuList = NguyenLieuService.GetByProduct(ProductDetail.Ma);
                 ProductMaterials = new AsyncObservableCollection<dynamic>();
@@ -231,7 +234,8 @@ namespace CoffeeShop.ViewModels
 
             // Danh sách loại sản phẩm
             Categories = new AsyncObservableCollection<LoaiSanPhamService>();
-            foreach (var item in LoaiSanPhamService.GetAll())
+            List<LoaiSanPhamService> categoryList = LoaiSanPhamService.GetAll();
+            foreach (var item in categoryList)
             {
                 Categories.Add(item);
             }
@@ -278,16 +282,17 @@ namespace CoffeeShop.ViewModels
 
             ClickEditProductButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
                 IsOpenEditProductDialog = true;
-
                 ProductDetail = SanPhamService.GetById(param.Ma);
-                SelectedProductCategory = LoaiSanPhamService.GetById(ProductDetail.MaLoai);
+
+                SelectedProductCategory = Categories.First(x => x.Ma == ProductDetail.MaLoai);
 
                 SelectedMaterial = null;
                 SelectedProductMaterial = null;
 
                 ProductMaterials = new AsyncObservableCollection<dynamic>();
+                List<NguyenLieuService> nguyenLieuList = NguyenLieuService.GetByProduct(param.Ma);
 
-                foreach (var item in NguyenLieuService.GetByProduct(param.Ma))
+                foreach (var item in nguyenLieuList)
                 {
                     KhoNguyenLieuService materialToEdit = KhoNguyenLieuService.GetById(item.MaNL);
                     ProductMaterials.Add(new
@@ -317,30 +322,31 @@ namespace CoffeeShop.ViewModels
                 {
                     if (IsAllInputValid())
                     {
+                        int ma = ProductDetail.Ma;
                         ProductDetail.Update();
-                        
+                        List<NguyenLieuService> nguyenLieuList = NguyenLieuService.GetByProduct(ma);
+                        foreach (NguyenLieuService item in nguyenLieuList)
+                        {
+                            item.Delete();
+                        }
                         foreach (var item in ProductMaterials)
                         {
                             NguyenLieuService materialToAdd = new NguyenLieuService();
-                            materialToAdd.MaSP = SelectedProduct.Ma;
+                            materialToAdd.MaSP = ProductDetail.Ma;
                             materialToAdd.MaNL = item.MaNL;
                             materialToAdd.SoLuong = item.SoLuong;
-                            item.Create();
+                            materialToAdd.Create();
                         }
 
                         // cập nhật danh sách
-                        Products.Remove(SelectedProduct);
-                        if (SelectedCategory.Ma == ProductDetail.MaLoai)
-                        {
-                            Products.Add(ProductDetail);
-                        }
+                        GetProductsByType(SelectedCategory.Ma);
+                        
                         IsOpenEditProductDialog = false;
                     }
                 }
                 else
                 {
                     IsOpenEditProductDialog = false;
-
                 }
             });
 
@@ -374,7 +380,7 @@ namespace CoffeeShop.ViewModels
                 deletedMaterial.Ten = param.Ten;
                 deletedMaterial.DonVi = param.DonVi;
                 Materials.Add(deletedMaterial);
-                ProductMaterials.Remove(param);
+                ProductMaterials.Remove(deletedMaterial);
             });
 
             ClickDeleteProductButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
@@ -385,16 +391,14 @@ namespace CoffeeShop.ViewModels
             DeleteProductCommand = new RelayCommand<object>((param) => { return true; }, (param) => {
                 if (bool.Parse(param.ToString()) == true)
                 {
-                    ProductDetail.Delete();
-                    foreach (var item in ProductMaterials)
+                    List<NguyenLieuService> nguyenLieuList = NguyenLieuService.GetByProduct(SelectedProduct.Ma);
+                    foreach (NguyenLieuService item in nguyenLieuList)
                     {
-                        NguyenLieuService materialToDelete = new NguyenLieuService();
-                        materialToDelete.MaSP = SelectedProduct.Ma;
-                        materialToDelete.MaNL = item.MaNL;
-                        materialToDelete.SoLuong = item.SoLuong;
-                        materialToDelete.Delete();
+                        item.Delete();
                     }
+                    SelectedProduct.Delete();
                     Products.Remove(SelectedProduct);
+                    SelectedProduct = null;
                 }
                 IsOpenDeleteProductDialog = false;
             });

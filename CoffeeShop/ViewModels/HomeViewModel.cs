@@ -198,7 +198,14 @@ namespace CoffeeShop.ViewModels
             });
 
             ClickCheckoutButtonCommand = new RelayCommand<dynamic>((param) => { return true; }, (param) => {
-                IsOpenShowCheckoutDialog = true;
+                if (MyCart.IsEmpty())
+                {
+                    Alert("Giỏ hàng rỗng ! Vui lòng chọn sản phẩm !");
+                }
+                else
+                {
+                    IsOpenShowCheckoutDialog = true;
+                }
             });
 
             CloseShowCheckoutCommand = new RelayCommand<object>((param) => { return true; }, (param) => {

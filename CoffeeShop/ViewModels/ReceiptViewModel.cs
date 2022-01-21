@@ -65,7 +65,7 @@ namespace CoffeeShop.ViewModels
                         });
                         ShowReceiptTotal += item.GiaSP * item.SoLuong;
                     }
-                    ShowReceiptRealPay = ShowReceiptTotal + ((ShowReceiptPoint < 0) ? ShowReceiptPoint : 0) * 1000;
+                    ShowReceiptRealPay = hoaDon.TongTien;
                 }
                 OnPropertyChanged(); } }
 

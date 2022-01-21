@@ -57,7 +57,7 @@ namespace CoffeeShop.Services
                 {
                     value = Customer.DiemTichLuy;
                 }
-                RealPayment += _spendPoint * 1000;
+                //RealPayment += _spendPoint * 1000;
                 RealPayment -= value * 1000;
                 _spendPoint = value;
                 OnPropertyChanged(); } }
@@ -76,6 +76,10 @@ namespace CoffeeShop.Services
             return _instance;
         }
 
+        public bool IsEmpty()
+        {
+            return _productIdList.Count < 1;
+        }
         public bool AddProduct(int maSP)
         {
             if (!IsEnoughMaterial(maSP))

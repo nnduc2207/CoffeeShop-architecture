@@ -180,6 +180,7 @@ namespace CoffeeShop.ViewModels
                     {
                         SelectedRawMaterial.SoLuong += ChangeRawMaterialAmount;
                         RawMaterials.First(x => x.Ma == SelectedRawMaterial.Ma).SoLuong = SelectedRawMaterial.SoLuong;
+                        SelectedRawMaterial.Update();
                     }
                 }
                 else
